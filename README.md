@@ -1,73 +1,102 @@
-# Welcome to your Lovable project
+# Rental Utility POS System
 
-## Project info
+A powerful and modern Rental Utility POS System built for managing rental and utility businesses efficiently. The system includes complete sales and rental management with Quotations, Delivery Challans, Invoices, Payment Tracking, Customer Ledger Management, Inventory Control, and full transaction traceability.
 
-**URL**: https://lovable.dev/projects/4b0414f8-91d0-49ad-9325-94c94ded045c
+---
 
-## How can I edit this code?
+## Features
 
-There are several ways of editing your application.
+- POS Billing System
+- Rental Management
+- Quotation Generation
+- Delivery Challan Management
+- Invoice Generation
+- Customer Ledger & Payment Tracking
+- Complete Transaction Traceability
+- Inventory & Stock Management
+- Financial Reports & Analytics
+- Transport Charge Calculation
+- Export Reports to CSV/Excel
+- Responsive Dashboard UI
 
-**Use Lovable**
+---
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/4b0414f8-91d0-49ad-9325-94c94ded045c) and start prompting.
+## Technologies Used
 
-Changes made via Lovable will be committed automatically to this repo.
+### Frontend
+- React
+- TypeScript
+- Tailwind CSS
+- shadcn/ui
+- Vite
 
-**Use your preferred IDE**
+### Backend
+- PHP
+- MySQL
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+---
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+## Installation
 
-Follow these steps:
+Clone the repository:
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+```bash
+git clone https://github.com/mdashfaqq/Rental-Utility-System.git
+```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+Navigate to the project folder:
 
-# Step 3: Install the necessary dependencies.
-npm i
+```bash
+cd Rental-Utility-System
+```
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+Install dependencies:
+
+```bash
+npm install
+```
+
+Start the development server:
+
+```bash
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+---
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+## Modules Included
 
-**Use GitHub Codespaces**
+- Sales POS
+- Rental POS
+- Quotations
+- Delivery Challans
+- Invoice Management
+- Customer Ledger
+- Payment History
+- Inventory Management
+- Financial Reporting
+- Business Analytics
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+---
 
-## What technologies are used for this project?
+## Future Improvements
 
-This project is built with:
+- Online Payments
+- SMS & Email Notifications
+- Multi-user Role Management
+- Mobile App Support
+- Cloud Backup & Sync
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+---
 
-## How can I deploy this project?
+## Author
 
-Simply open [Lovable](https://lovable.dev/projects/4b0414f8-91d0-49ad-9325-94c94ded045c) and click on Share -> Publish.
+Developed by Mohamed Ashfaq
 
-## Can I connect a custom domain to my Lovable project?
+GitHub: https://github.com/mdashfaqq
 
-Yes, you can!
+---
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## License
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+This project is licensed under the MIT License.
