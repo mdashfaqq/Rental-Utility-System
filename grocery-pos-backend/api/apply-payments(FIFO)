@@ -1,0 +1,232 @@
+<?php
+include_once __DIR__ . '/../config/cors.php';
+include_once __DIR__ . '/../config/database.php';
+
+header("Content-Type: application/json");
+
+// 🔥 HANDLE PREFLIGHT
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    exit();
+}
+
+$db = (new Database())->getConnection();
+$data = json_decode(file_get_contents("php://input"), true);
+
+// 🔹 VALIDATION
+if (
+    !isset($data["customer_phone"]) ||
+    !isset($data["amount"]) ||
+    floatval($data["amount"]) <= 0
+) {
+    echo json_encode([
+        "success" => false,
+        "message" => "Invalid payment data"
+    ]);
+    exit();
+}
+
+try {
+    $db->beginTransaction();
+
+    $phone = $data["customer_phone"];
+    $customerName = $data["customer_name"] ?? "";
+    $paymentAmount = floatval($data["amount"]);
+    $paymentMethod = $data["payment_method"] ?? "cash";
+
+    // 🔹 1. Insert payment record
+    $stmt = $db->prepare("
+        INSERT INTO payments (customer_phone, customer_name, amount, payment_method)
+        VALUES (?, ?, ?, ?)
+    ");
+    $stmt->execute([
+        $phone,
+        $customerName,
+        $paymentAmount,
+        $paymentMethod
+    ]);
+
+    $payment_id = $db->lastInsertId();
+
+    // 🔹 2. Fetch pending/partial invoices (oldest first)
+    $stmt = $db->prepare("
+SELECT * FROM invoices
+WHERE customer_phone = ?
+ORDER BY id ASC
+    ");
+    $stmt->execute([$phone]);
+    $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $remaining = $paymentAmount;
+
+    foreach ($invoices as $inv) {
+
+        if ($remaining <= 0) break;
+
+        $invoiceId = $inv["id"];
+        
+        // =====================================
+// USE STORED INVOICE TOTAL
+// =====================================
+
+$total =
+    (float)($inv["total_amount"] ?? 0);
+        // =====================================
+// RECALCULATE ACTUAL TOTAL
+// // =====================================
+
+// $calc = $db->prepare("
+
+//     SELECT
+
+//         ROUND(
+
+//             SUM(
+
+//                 (
+//                     dci.quantity_sent *
+//                     COALESCE(p.selling_price, 0)
+//                 )
+
+//                 +
+
+//                 (
+//                     COALESCE(r.damaged_qty, 0) *
+//                     COALESCE(r.damage_fee, 0)
+//                 )
+
+//                 +
+
+//                 (
+//                     COALESCE(r.missing_qty, 0) *
+//                     COALESCE(p.unit_price, 0)
+//                 )
+
+//             ),
+
+//             2
+
+//         ) AS final_total
+
+//     FROM delivery_challan_items dci
+
+//     LEFT JOIN products p
+//         ON dci.product_id = p.id
+
+//     LEFT JOIN delivery_challan_returns r
+//         ON dci.product_id = r.product_id
+//         AND dci.challan_id = r.challan_id
+
+//     WHERE dci.challan_id = ?
+
+// ");
+
+// $calc->execute([
+//     $inv["challan_id"]
+// ]);
+
+// $calcResult =
+//     $calc->fetch(PDO::FETCH_ASSOC);
+
+// $total =
+//     (float)($calcResult["final_total"] ?? 0);
+
+
+// // =====================================
+// // SYNC INVOICE TOTAL
+// // =====================================
+
+// $sync = $db->prepare("
+//     UPDATE invoices
+//     SET total_amount = ?
+//     WHERE id = ?
+// ");
+
+// $sync->execute([
+//     $total,
+//     $invoiceId
+// ]);
+        $paid = floatval($inv["paid_amount"]);
+
+        // 🔥 Skip invalid invoices
+        if ($total <= 0) continue;
+
+        $balance =
+    round(
+        max(0, $total - $paid),
+        2
+    );
+
+        if ($balance <= 0) continue;
+
+        // 🔹 Decide payment allocation
+        if ($remaining >= $balance) {
+            $payNow = $balance;
+            $remaining -= $balance;
+        } else {
+            $payNow = $remaining;
+            $remaining = 0;
+        }
+
+       $newPaid =
+    round(
+        $paid + $payNow,
+        2
+    );
+    
+
+        // 🔥 Clamp (never exceed total)
+        $newPaid = min($newPaid, $total);
+
+        // 🔹 Determine status
+        if ($newPaid <= 0) {
+            $status = "pending";
+        } elseif ($newPaid < $total) {
+            $status = "partial";
+        } else {
+            $status = "paid";
+        }
+
+        // 🔹 Update invoice
+        $update = $db->prepare("
+            UPDATE invoices
+            SET paid_amount = ?, status = ?
+            WHERE id = ?
+        ");
+        $update->execute([$newPaid, $status, $invoiceId]);
+
+        // 🔹 Save allocation (audit trail)
+        $alloc = $db->prepare("
+            INSERT INTO payment_allocations (payment_id, invoice_id, amount)
+            VALUES (?, ?, ?)
+        ");
+        $alloc->execute([$payment_id, $invoiceId, $payNow]);
+    }
+
+    // 🔥 Optional: handle excess payment (advance)
+    // if ($remaining > 0) {
+    //     $advance = $db->prepare("
+    //         INSERT INTO customer_advance (customer_phone, amount)
+    //         VALUES (?, ?)
+    //     ");
+    //     $advance->execute([$phone, $remaining]);
+    // }
+
+    $db->commit();
+
+    echo json_encode([
+        "success" => true,
+        "message" => "Payment applied successfully"
+    ]);
+
+} catch (Exception $e) {
+
+    if ($db->inTransaction()) {
+        $db->rollBack();
+    }
+
+    echo json_encode([
+        "success" => false,
+        "error" => $e->getMessage()
+    ]);
+}
