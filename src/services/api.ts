@@ -1,7 +1,18 @@
 import axios from 'axios';
 
-export const API_BASE_URL = 'https://unreadymades.com/Premier-Rentals/grocery-pos-backend/api';
-//  export const API_BASE_URL = 'http://localhost/grocery-pos-backend/api';
+const isVercelOrRemoteFrontend =
+  typeof window !== 'undefined' &&
+  window.location.hostname !== 'localhost' &&
+  window.location.hostname !== '127.0.0.1' &&
+  !window.location.hostname.includes('unreadymades.com');
+
+export const API_BASE_URL =
+  import.meta.env.API_BASE_URL ||
+  import.meta.env.VITE_API_BASE_URL ||
+  (isVercelOrRemoteFrontend
+    ? '/api'
+    : 'https://unreadymades.com/Premier-Rentals/grocery-pos-backend/api');
+
 export const FILE_BASE_URL = 'https://unreadymades.com/Premier-Rentals/grocery-pos-backend';
 
 
