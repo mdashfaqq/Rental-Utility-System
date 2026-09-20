@@ -263,10 +263,10 @@ case "invoice-details":
           onMobileMenuClose={() => setIsMobileMenuOpen(false)}
         />
       </div>
-      <main className={`flex-1 min-w-0 min-h-0 flex flex-col ${activeTab === 'pos' ? 'overflow-hidden' : 'overflow-auto'}`}>
-        <div className={`flex-1 min-w-0 min-h-0 ${activeTab === 'pos' ? 'overflow-hidden' : ''} pb-24 lg:pb-3 lg:pr-3 lg:pt-3`}>
-          <div className="h-full w-full min-w-0 lg:rounded-3xl lg:soft-panel lg:overflow-hidden">
-            <div className={`w-full min-w-0 ${activeTab === 'pos' ? 'h-full overflow-hidden' : 'h-full overflow-auto'}`}>
+      <main className={`flex-1 min-w-0 min-h-0 flex flex-col ${activeTab === 'pos' ? 'overflow-hidden' : 'overflow-auto no-scrollbar'}`}>
+        <div className={`flex-1 min-w-0 min-h-0 ${activeTab === 'pos' ? 'overflow-hidden' : 'overflow-auto no-scrollbar'} pb-24 lg:pb-3 lg:pr-3 lg:pt-3`}>
+          <div className={`h-full w-full min-w-0 lg:rounded-3xl lg:soft-panel ${activeTab === 'pos' ? 'lg:overflow-hidden' : 'overflow-visible'}`}>
+            <div className={`w-full min-w-0 ${activeTab === 'pos' ? 'h-full overflow-hidden' : 'h-full overflow-auto no-scrollbar'}`}>
               {renderContent()}
             </div>
           </div>

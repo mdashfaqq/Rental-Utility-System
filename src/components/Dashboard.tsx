@@ -456,68 +456,65 @@ const statsCards = [
              <div className="flex items-center space-x-6">
 
   {/* 🔔 Notification Bell */}
-  <div className="relative" ref={notifRef}>
-    <button onClick={() => setShowNotifications(!showNotifications)}>
-      <Bell className="h-6 w-6 text-foreground cursor-pointer" />
+  <div className="relative z-30" ref={notifRef}>
+    <button
+      type="button"
+      onClick={() => setShowNotifications(!showNotifications)}
+      className="relative rounded-full p-1.5 hover:bg-muted"
+    >
+      <Bell className="h-6 w-6 text-foreground" />
+      {alerts.length > 0 && (
+        <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 bg-red-500 text-white text-[10px] leading-[18px] text-center rounded-full">
+          {alerts.length}
+        </span>
+      )}
     </button>
 
-    {/* Badge */}
-    {alerts.length > 0 && (
-      <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-1.5 py-0.5 rounded-full">
-        {alerts.length}
-      </span>
-    )}
-
-    {/* Dropdown */}
 {showNotifications && (
-  <div className="absolute right-0 top-12 w-80 bg-card rounded-2xl shadow-soft border z-50 overflow-hidden">
-
-    {/* Header */}
+  <div className="absolute left-0 sm:left-auto sm:right-0 top-11 z-[80] w-[min(20rem,calc(100vw-2.5rem))] bg-card rounded-2xl shadow-soft border overflow-hidden">
     <div className="p-3 border-b font-semibold text-foreground flex justify-between">
       <span>Notifications</span>
-      <span className="text-xs text-gray-400">{alerts.length}</span>
+      <span className="text-xs text-muted-foreground">{alerts.length}</span>
     </div>
 
-    {/* List */}
-    <div className="max-h-80 overflow-y-auto">
-
+    <div className="max-h-80 overflow-y-auto no-scrollbar">
       {alerts.length === 0 ? (
-        <div className="p-4 text-sm text-gray-500 text-center">
-          No alerts 🎉
+        <div className="p-4 text-sm text-muted-foreground text-center">
+          No alerts
         </div>
       ) : (
         alerts.slice(0, 6).map((alert, index) => (
           <div
             key={index}
-            className="flex items-start justify-between p-3 hover:bg-muted/60 border-b text-sm"
+            className="flex items-start gap-2 p-3 hover:bg-muted/60 border-b last:border-b-0 text-sm"
           >
-            <div className="flex items-start space-x-2">
-
+            <div className="mt-0.5 shrink-0">
               {alert.type === "error" && (
-                <XCircle className="h-4 w-4 text-red-500 mt-0.5" />
+                <XCircle className="h-4 w-4 text-destructive" />
               )}
               {alert.type === "warning" && (
-                <AlertTriangle className="h-4 w-4 text-yellow-500 mt-0.5" />
+                <AlertTriangle className="h-4 w-4 text-amber-600" />
               )}
               {alert.type === "success" && (
-                <CheckCircle2 className="h-4 w-4 text-green-500 mt-0.5" />
+                <CheckCircle2 className="h-4 w-4 text-sage" />
               )}
-
-              <span className="text-foreground">{alert.message}</span>
             </div>
 
-            {/* Actions */}
+            <p className="min-w-0 flex-1 text-foreground leading-snug break-words">
+              {alert.message}
+            </p>
+
             {alert.product ? (
               <button
                 onClick={() => handleStockIn(alert.product)}
-                className="text-xs text-foreground underline-offset-4 hover:underline"
+                className="shrink-0 rounded-full bg-accent px-2.5 py-1 text-[11px] font-medium"
               >
                 Fix
               </button>
             ) : alert.message.includes("Sales") ? (
               <button
                 onClick={() => onTabChange("reports")}
-                className="text-xs text-foreground underline-offset-4 hover:underline"
+                className="shrink-0 rounded-full bg-accent px-2.5 py-1 text-[11px] font-medium"
               >
                 View
               </button>
@@ -527,16 +524,14 @@ const statsCards = [
       )}
     </div>
 
-    {/* Footer */}
     <div className="p-2 text-center border-t">
       <button
         onClick={() => onTabChange("inventory")}
-        className="text-xs text-blue-600 hover:underline"
+        className="text-xs text-muted-foreground hover:text-foreground"
       >
         View all alerts
       </button>
     </div>
-
   </div>
 )}
   </div>
@@ -594,9 +589,9 @@ const statsCards = [
           <div
             className={`flex items-center text-[10px] sm:text-xs font-medium px-2 py-1 rounded-full whitespace-nowrap ${
               stat.changeType === 'increase'
-                ? 'text-green-700 bg-green-100'
+                ? 'text-foreground bg-champagne'
                 : stat.changeType === 'decrease'
-                ? 'text-red-700 bg-red-100'
+                ? 'text-foreground bg-muted'
                 : 'text-muted-foreground bg-muted'
             }`}
           >
@@ -733,9 +728,9 @@ const statsCards = [
           
           
           {/* Recent Transactions - Enhanced */}
-<Card className="lg:col-span-2 h-[500px] lg:h-[650px]">
+<Card className="lg:col-span-2 h-[500px] lg:h-[650px] flex flex-col overflow-hidden">
 
-            <CardHeader className="bg-muted/40 rounded-t-2xl border-b border-border/60">
+            <CardHeader className="bg-muted/40 rounded-t-2xl border-b border-border/60 shrink-0">
               <div className="flex items-center justify-between">
                 <CardTitle className="flex items-center text-xl font-display font-normal">
                   <Activity className="h-5 w-5 text-sage mr-3" />
@@ -777,7 +772,7 @@ const statsCards = [
                 </div>
               </div>
             </CardHeader>
-<CardContent className="p-0 h-[550px] overflow-y-auto">
+<CardContent className="p-0 flex-1 min-h-0 overflow-y-auto no-scrollbar">
 
              {invoices
   .filter(inv =>
@@ -792,48 +787,29 @@ const statsCards = [
     setSelectedInvoiceId(inv.id);
     onTabChange("invoice-details");
   }}
-    className={`
-
-  cursor-pointer
-
-  flex items-center justify-between p-4 hover:bg-muted/50 transition-colors ${
-      index !==
-invoices
-  .filter(inv =>
-    statusFilter
-      ? inv.status === statusFilter
-      : true
-  )
-  .slice(0, 6).length - 1 ? 'border-b border-gray-100' : ''
-    }`}
+    className="cursor-pointer flex items-center justify-between gap-3 p-4 hover:bg-muted/50 transition-colors border-b border-border/60 last:border-b-0 min-w-0"
   >
-    <div className="flex items-center space-x-4">
+    <div className="flex items-center gap-3 min-w-0 flex-1">
       
       {/* ICON */}
-      <div className="w-12 h-12 bg-accent rounded-full flex items-center justify-center">
-        <FileText className="h-6 w-6 text-foreground" />
+      <div className="w-10 h-10 sm:w-12 sm:h-12 bg-accent rounded-full flex items-center justify-center shrink-0">
+        <FileText className="h-5 w-5 sm:h-6 sm:w-6 text-foreground" />
       </div>
 
       {/* DETAILS */}
-      <div>
-        <p className="font-semibold text-foreground">
+      <div className="min-w-0 flex-1">
+        <p className="font-semibold text-foreground truncate">
           Invoice #{inv.id}
         </p>
 
-        <div className="flex items-center space-x-3 text-sm text-muted-foreground">
-          <span>{inv.customer_name || "Walk-in"}</span>
-          <span>•</span>
-          <span className={`capitalize ${
-            inv.status === "paid"
-              ? "text-green-600"
-              : inv.status === "partial"
-              ? "text-yellow-600"
-              : "text-red-600"
-          }`}>
+        <div className="flex items-center gap-2 text-sm text-muted-foreground min-w-0">
+          <span className="truncate">{inv.customer_name || "Walk-in"}</span>
+          <span className="shrink-0">•</span>
+          <span className="capitalize text-foreground shrink-0">
             {inv.status}
           </span>
-          <span>•</span>
-          <span>
+          <span className="shrink-0 hidden sm:inline">•</span>
+          <span className="truncate hidden sm:inline">
 {new Date(
   inv.created_at.replace(' ', 'T')
 ).toLocaleString("en-IN", {
@@ -848,7 +824,7 @@ invoices
     </div>
 
     {/* AMOUNT */}
-    <div className="text-right">
+    <div className="text-right shrink-0">
       <p className="font-bold text-foreground text-lg">
         ₹{Number(inv.total_amount || 0).toFixed(2)}
       </p>
@@ -881,20 +857,20 @@ invoices
           <div className="space-y-6">
             
             {/* Stock Alerts - Enhanced */}
-      <Card className="h-[320px] flex flex-col">
+      <Card className="h-[320px] flex flex-col overflow-hidden">
   <CardHeader className="bg-muted/40 rounded-t-2xl">
     <CardTitle className="flex items-center text-lg font-display font-normal">
-      <AlertTriangle className="h-5 w-5 text-destructive mr-2" />
+      <AlertTriangle className="h-5 w-5 text-foreground mr-2" />
       {t('Stock Alerts')}
       
-      <span className="ml-auto bg-red-100 text-red-800 text-xs font-medium px-2 py-1 rounded-full">
+      <span className="ml-auto bg-accent text-foreground text-xs font-medium px-2 py-1 rounded-full">
         {lowStockProducts.length + outOfStockProducts.length}
       </span>
     </CardTitle>
   </CardHeader>
 
   <CardContent className="p-0 flex-1 overflow-hidden">
-    <div className="overflow-y-auto pr-2 h-full">
+    <div className="overflow-y-auto no-scrollbar h-full min-h-0">
       {[...outOfStockProducts, ...lowStockProducts].map((product) => (
 <div
   key={product.id}
@@ -911,11 +887,7 @@ setStockType("in");
   "
 >
           <div className="flex items-center space-x-3">
-            <div
-              className={`w-3 h-3 rounded-full ${
-                product.stock === 0 ? 'bg-red-500' : 'bg-yellow-500'
-              }`}
-            ></div>
+            <div className="w-3 h-3 rounded-full bg-champagne border border-border"></div>
 
             <div>
               <p className="font-medium text-gray-900 text-sm">
@@ -929,13 +901,7 @@ setStockType("in");
           </div>
 
           <div className="text-right">
-            <p
-              className={`font-bold text-sm ${
-                product.stock === 0
-                  ? 'text-red-600'
-                  : 'text-yellow-600'
-              }`}
-            >
+            <p className="font-medium text-sm text-foreground">
               {product.stock === 0
                 ? 'Out of Stock'
                 : `${product.stock} left`}
@@ -946,7 +912,7 @@ setStockType("in");
 
       {(lowStockProducts.length + outOfStockProducts.length) === 0 && (
         <div className="text-center py-8">
-          <CheckCircle2 className="h-10 w-10 text-green-500 mx-auto mb-3" />
+          <CheckCircle2 className="h-10 w-10 text-muted-foreground mx-auto mb-3" />
 
           <p className="text-gray-600 text-sm">
             All products are well stocked
@@ -957,78 +923,52 @@ setStockType("in");
   </CardContent>
 </Card>
             {/* Recent Activity */}
-            <Card>
-              <CardHeader className="bg-muted/40 rounded-t-2xl">
+            <Card className="overflow-hidden flex flex-col max-h-[320px]">
+              <CardHeader className="bg-muted/40 rounded-t-2xl shrink-0">
                 <CardTitle className="flex items-center text-lg font-display font-normal">
                   <Bell className="h-5 w-5 text-foreground mr-2" />
                   {t('Recent Activity')}
                 </CardTitle>
               </CardHeader>
-              <CardContent className="p-0">
-                <div className="max-h-64 overflow-y-auto">
+              <CardContent className="p-0 flex-1 min-h-0 overflow-hidden">
+                <div className="max-h-64 overflow-y-auto no-scrollbar">
                   {recentActivity.map((activity, index) => (
                     <div
                       key={index}
                       className="flex items-start space-x-3 p-3 hover:bg-gray-50 transition-colors border-b border-gray-100 last:border-b-0"
                     >
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-  activity.type === 'sale'
-    ? 'bg-green-100'
-
-    : activity.type === 'payment'
-    ? 'bg-emerald-100'
-
-    : activity.type === 'stock'
-    ? 'bg-red-100'
-
-    : activity.type === 'return'
-    ? 'bg-cyan-100'
-
-    : activity.type === 'damage'
-    ? 'bg-orange-100'
-
-    : activity.type === 'missing'
-    ? 'bg-yellow-100'
-
-    : activity.type === 'quotation'
-    ? 'bg-indigo-100'
-
-    : activity.type === 'customer'
-    ? 'bg-pink-100'
-
-    : 'bg-blue-100'
-}`}>
+                  <div className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 bg-accent">
 
   {activity.type === 'sale' && (
-    <Receipt className="h-4 w-4 text-green-600" />
+    <Receipt className="h-4 w-4 text-foreground" />
   )}
 
   {activity.type === 'payment' && (
-    <CreditCard className="h-4 w-4 text-emerald-600" />
+    <CreditCard className="h-4 w-4 text-foreground" />
   )}
 
   {activity.type === 'stock' && (
-    <AlertTriangle className="h-4 w-4 text-red-600" />
+    <AlertTriangle className="h-4 w-4 text-foreground" />
   )}
 
   {activity.type === 'return' && (
-    <RotateCcw className="h-4 w-4 text-cyan-600" />
+    <RotateCcw className="h-4 w-4 text-foreground" />
   )}
 
   {activity.type === 'damage' && (
-    <ShieldAlert className="h-4 w-4 text-orange-600" />
+    <ShieldAlert className="h-4 w-4 text-foreground" />
   )}
 
   {activity.type === 'missing' && (
-    <PackageX className="h-4 w-4 text-yellow-600" />
+    <PackageX className="h-4 w-4 text-foreground" />
   )}
 
   {activity.type === 'quotation' && (
-    <FileText className="h-4 w-4 text-indigo-600" />
+    <FileText className="h-4 w-4 text-foreground" />
   )}
 
   {activity.type === 'customer' && (
-    <UserPlus className="h-4 w-4 text-pink-600" />
+    <UserPlus className="h-4 w-4 text-foreground" />
   )}
 
 </div>
@@ -1037,7 +977,7 @@ setStockType("in");
                         <div className="flex items-center justify-between mt-1">
                           <p className="text-xs text-gray-500">{activity.time}</p>
                           {activity.amount && (
-                            <span className="text-xs font-semibold text-green-600">{activity.amount}</span>
+                            <span className="text-xs font-semibold text-foreground">{activity.amount}</span>
                           )}
                         </div>
                       </div>
@@ -1067,11 +1007,11 @@ setStockType("in");
                   >
                     <div className="text-center">
                       <div className="w-10 h-10 sm:w-12 sm:h-12 bg-accent rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-3">
-                        <Package className="h-5 w-5 sm:h-6 sm:w-6 text-purple-600" />
+                        <Package className="h-5 w-5 sm:h-6 sm:w-6 text-foreground" />
                       </div>
                       <h3 className="font-semibold text-gray-900 text-xs sm:text-sm mb-1 truncate">{product.name}</h3>
                       <p className="text-xs text-gray-600 mb-1 sm:mb-2 truncate">{product.category}</p>
-                      <p className="text-sm sm:text-lg font-bold text-purple-600">₹{product.price}</p>
+                      <p className="text-sm sm:text-lg font-bold text-foreground">₹{product.price}</p>
                       <p className="text-xs text-gray-500">{product.soldCount || 0} Rented</p>
                     </div>
                   </div>

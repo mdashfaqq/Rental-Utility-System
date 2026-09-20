@@ -729,6 +729,12 @@ export const Settings = () => {
     loadUsers();
   }, []);
 
+useEffect(() => {
+  if (storeDetails.name?.trim()) {
+    document.title = storeDetails.name;
+  }
+}, [storeDetails.name]);
+
   const loadSettings = async () => {
     setLoading(true);
     try {

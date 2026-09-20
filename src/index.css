@@ -110,6 +110,17 @@
   .soft-panel {
     @apply bg-white/80 backdrop-blur-xl border border-black/[0.05] shadow-[0_8px_30px_rgba(36,24,16,0.06)];
   }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+    width: 0;
+    height: 0;
+  }
 }
 
 .cell {
@@ -128,6 +139,23 @@
 .highlight {
   background: #cbd5e1;
   font-weight: bold;
+}
+
+html,
+body,
+* {
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+*::-webkit-scrollbar,
+*::-webkit-scrollbar-thumb,
+*::-webkit-scrollbar-track,
+*::-webkit-scrollbar-corner {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  background: transparent !important;
 }
 
 @media print {

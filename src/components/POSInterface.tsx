@@ -1470,7 +1470,7 @@ else {
                   
                 </div>
 
-                <div className="flex-1 overflow-y-auto p-4">
+                <div className="flex-1 overflow-y-auto no-scrollbar p-4">
                   <ProductViewSwitcher
                     products={filteredProducts}
                     onQuickAdd={handleQuickAdd}
