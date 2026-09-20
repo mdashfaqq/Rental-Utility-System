@@ -1,10 +1,10 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Eye, EyeOff, LogIn } from 'lucide-react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from './AuthContext';
 
 interface LoginProps {
@@ -19,14 +19,50 @@ export const Login = ({ onLogin, onSwitchToRegister }: LoginProps) => {
   });
   const [showPassword, setShowPassword] = useState(false);
   const [submitting, setSubmitting] = useState(false);
-  const { login, isAuthenticated } = useAuth();
+  const { login, isAuthenticated, loading } = useAuth();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const autoLoginAttempted = useRef(false);
 
   useEffect(() => {
     if (isAuthenticated) {
       navigate('/');
+      return;
     }
-  }, [isAuthenticated, navigate]);
+
+    const demoParam = searchParams.get('demo');
+    const isDemo = demoParam === 'true' || demoParam === '1';
+
+    if (isDemo && !autoLoginAttempted.current && !loading) {
+      autoLoginAttempted.current = true;
+
+      const demoUsername = (import.meta.env.VITE_DEMO_USERNAME || import.meta.env.VITE_DEMO_EMAIL || 'admin') as string;
+      const demoPassword = (import.meta.env.VITE_DEMO_PASSWORD || 'password') as string;
+
+      setFormData({
+        username: demoUsername,
+        password: demoPassword,
+      });
+
+      const triggerAutoLogin = async () => {
+        setSubmitting(true);
+        try {
+          const handler = onLogin || login;
+          const result = await handler(demoUsername, demoPassword);
+          const success = result !== false;
+          if (success) {
+            navigate('/');
+          }
+        } catch (error) {
+          console.error('Demo login error:', error);
+        } finally {
+          setSubmitting(false);
+        }
+      };
+
+      triggerAutoLogin();
+    }
+  }, [isAuthenticated, loading, navigate, onLogin, login, searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
