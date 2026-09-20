@@ -36,8 +36,21 @@ export const Login = ({ onLogin, onSwitchToRegister }: LoginProps) => {
     if (isDemo && !autoLoginAttempted.current && !loading) {
       autoLoginAttempted.current = true;
 
-      const demoUsername = (import.meta.env.VITE_DEMO_USERNAME || import.meta.env.VITE_DEMO_EMAIL || 'admin') as string;
-      const demoPassword = (import.meta.env.VITE_DEMO_PASSWORD || 'password') as string;
+      const demoUsername = (
+        import.meta.env.DEMO_USERNAME ||
+        import.meta.env.DEMO_EMAIL ||
+        import.meta.env.APP_DEMO_USERNAME ||
+        import.meta.env.APP_DEMO_EMAIL ||
+        import.meta.env.VITE_DEMO_USERNAME ||
+        import.meta.env.VITE_DEMO_EMAIL ||
+        'admin'
+      ) as string;
+      const demoPassword = (
+        import.meta.env.DEMO_PASSWORD ||
+        import.meta.env.APP_DEMO_PASSWORD ||
+        import.meta.env.VITE_DEMO_PASSWORD ||
+        'password'
+      ) as string;
 
       setFormData({
         username: demoUsername,

@@ -5,6 +5,7 @@ import { componentTagger } from "lovable-tagger";
 
 export default defineConfig(({ mode }) => ({
   base: '/Premier-Rentals/',
+  envPrefix: ['DEMO_', 'APP_', 'REACT_APP_', 'VITE_'],
   server: {
     host: "::",
     port: 8080,
