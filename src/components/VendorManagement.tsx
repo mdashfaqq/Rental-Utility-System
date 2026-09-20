@@ -40,11 +40,11 @@ export const VendorManagement = () => {
   };
 
   return (
-    <div className="p-6 bg-gradient-to-br from-purple-50 to-blue-100 min-h-screen">
-      <div className="flex items-center justify-between mb-6">
+    <div className="p-6 bg-transparent min-h-full">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-800">{t('vendors')}</h1>
-          <p className="text-gray-600">Manage your suppliers and vendor contacts</p>
+          <h1 className="font-display text-3xl font-normal text-foreground">{t('vendors')}</h1>
+          <p className="text-muted-foreground">Manage your suppliers and vendor contacts</p>
         </div>
         <div className="flex gap-2">
           <Button
@@ -54,7 +54,7 @@ export const VendorManagement = () => {
             {viewMode === 'grid' ? <Eye className="h-4 w-4 mr-2" /> : <Grid className="h-4 w-4 mr-2" />}
             {viewMode === 'grid' ? 'Table View' : 'Grid View'}
           </Button>
-          <Button onClick={handleAdd} className="bg-purple-600 hover:bg-purple-700">
+          <Button onClick={handleAdd}>
             <Plus className="h-4 w-4 mr-2" />
             {t('add')} {t('vendor')}
           </Button>

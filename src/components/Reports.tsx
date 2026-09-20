@@ -1829,9 +1829,9 @@ const exportReport = (type: string) => {
 // };
 
   return (
-    <div className="p-6 space-y-6 bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-gray-900">Reports & Analytics</h1>
+    <div className="p-4 sm:p-6 space-y-6 bg-transparent min-h-full">
+      <div className="flex items-center justify-between flex-col sm:flex-row gap-4">
+        <h1 className="font-display text-2xl sm:text-3xl font-normal text-foreground">Reports & Analytics</h1>
         <div className="flex gap-2">
           {/* <Button variant="outline">
             <Download className="h-4 w-4 mr-2" />
@@ -1842,50 +1842,50 @@ const exportReport = (type: string) => {
 
       {/* Key Metrics Cards */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <Card className="bg-gradient-to-r from-green-500 to-green-600 text-white">
+        <Card>
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-green-100">Total Sales</p>
-                <p className="text-2xl font-bold">₹{totalRevenue.toFixed(2)}</p>
+                <p className="text-sm text-muted-foreground">Total Sales</p>
+                <p className="text-2xl font-semibold">₹{totalRevenue.toFixed(2)}</p>
               </div>
-              <IndianRupee className="h-8 w-8 text-green-200" />
+              <IndianRupee className="h-8 w-8 text-sage" />
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-r from-blue-500 to-blue-600 text-white">
+        <Card>
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-blue-100">Total Orders</p>
-                <p className="text-2xl font-bold">{totalInvoices}</p>
+                <p className="text-sm text-muted-foreground">Total Orders</p>
+                <p className="text-2xl font-semibold">{totalInvoices}</p>
               </div>
-              <ShoppingCart className="h-8 w-8 text-blue-200" />
+              <ShoppingCart className="h-8 w-8 text-muted-foreground" />
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-r from-purple-500 to-purple-600 text-white">
+        <Card>
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-purple-100">Avg Order Value</p>
-                <p className="text-2xl font-bold">₹{avgInvoiceValue.toFixed(2)}</p>
+                <p className="text-sm text-muted-foreground">Avg Order Value</p>
+                <p className="text-2xl font-semibold">₹{avgInvoiceValue.toFixed(2)}</p>
               </div>
-              <TrendingUp className="h-8 w-8 text-purple-200" />
+              <TrendingUp className="h-8 w-8 text-muted-foreground" />
             </div>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-r from-orange-500 to-orange-600 text-white">
+        <Card>
           <CardContent className="p-6">
             <div className="flex items-center justify-between">
               <div>
-<p className="text-orange-100">Total Products</p>
-<p className="text-2xl font-bold">{totalItemsSold}</p>
+<p className="text-sm text-muted-foreground">Total Products</p>
+<p className="text-2xl font-semibold">{totalItemsSold}</p>
               </div>
-              <Package className="h-8 w-8 text-orange-200" />
+              <Package className="h-8 w-8 text-muted-foreground" />
             </div>
           </CardContent>
         </Card>
@@ -1893,28 +1893,31 @@ const exportReport = (type: string) => {
 
       {/* Reports Tabs */}
       <Tabs defaultValue="sales" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-7" >
-          <TabsTrigger value="sales">Sales Reports</TabsTrigger>
-          <TabsTrigger value="inventory">Inventory</TabsTrigger>
-          <TabsTrigger value="products">Products</TabsTrigger>
-          <TabsTrigger value="financial">Financial</TabsTrigger>
-          <TabsTrigger value="customer">Customer</TabsTrigger>
-          {/* <TabsTrigger value="tax">Tax Reports</TabsTrigger> */}
-          <TabsTrigger value="customer-yearly-report">Customer Yearly Report</TabsTrigger>
-          <TabsTrigger value="monthlyLedger">Monthly Ledger</TabsTrigger>
-        </TabsList>
+        <div className="overflow-x-auto pb-2">
+          <TabsList className="inline-flex w-auto min-w-full md:grid md:grid-cols-7">
+            <TabsTrigger value="sales" className="whitespace-nowrap">Sales</TabsTrigger>
+            <TabsTrigger value="inventory" className="whitespace-nowrap">Inventory</TabsTrigger>
+            <TabsTrigger value="products" className="whitespace-nowrap">Products</TabsTrigger>
+            <TabsTrigger value="financial" className="whitespace-nowrap">Financial</TabsTrigger>
+            <TabsTrigger value="customer" className="whitespace-nowrap">Customer</TabsTrigger>
+            {/* <TabsTrigger value="tax">Tax Reports</TabsTrigger> */}
+            <TabsTrigger value="customer-yearly-report" className="whitespace-nowrap">Yearly</TabsTrigger>
+            <TabsTrigger value="monthlyLedger" className="whitespace-nowrap">Ledger</TabsTrigger>
+          </TabsList>
+        </div>
 
       <TabsContent value="sales">
   <Card>
     <CardHeader>
-<CardTitle className="flex items-center justify-between">
+<CardTitle className="flex items-center justify-between flex-col sm:flex-row gap-4">
   <div className="flex items-center">
     <BarChart3 className="h-5 w-5 mr-2" />
     Sales Reports
   </div>
 
   <Button onClick={resetFilters} variant="outline" size="sm">
-    Reset Filters
+    <Filter className="h-4 w-4" />
+    <span className="hidden md:inline ml-2">Reset Filters</span>
   </Button>
 </CardTitle>
       
@@ -1958,8 +1961,8 @@ const exportReport = (type: string) => {
             className="w-full"
             onClick={() => exportSalesCSV()}
           >
-            <Download className="h-4 w-4 mr-2" />
-            Export
+            <Download className="h-4 w-4" />
+            <span className="hidden md:inline ml-2">Export</span>
           </Button>
         </div>
       </div>
@@ -1976,57 +1979,82 @@ const exportReport = (type: string) => {
           No sales found for selected date range
         </div>
       ) : (
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead className='text-center'>Date</TableHead>
-              <TableHead className='text-center'>Transaction ID</TableHead>
-              <TableHead className='text-center'>Customer</TableHead>
-              <TableHead className='text-center'>Items</TableHead>
-              <TableHead className='text-center'>Amount</TableHead>
-            </TableRow>
-          </TableHeader>
-
-          <TableBody>
-            {salesReport.map((t) => (
-              <TableRow key={t.id}>
-                <TableCell className='text-center'>
-                  {new Date(t.created_at).toLocaleDateString("en-IN")}
-                </TableCell>
-
-                <TableCell className="font-medium text-center">
-                  #{t.id}
-                </TableCell>
-<TableCell className="text-center">
-  {t.customer_name || "Walk-in"}
-</TableCell>
-                <TableCell className="text-center">
-                  {t.items?.length || 0}
-                </TableCell>
-
-
-                <TableCell className="font-semibold text-center">
-             ₹{Number(t.total_amount || 0).toFixed(2)}
-                </TableCell>
+        <>
+        {/* Desktop Table View */}
+        <div className="hidden md:block overflow-x-auto">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead className='text-center'>Date</TableHead>
+                <TableHead className='text-center'>Transaction ID</TableHead>
+                <TableHead className='text-center'>Customer</TableHead>
+                <TableHead className='text-center'>Items</TableHead>
+                <TableHead className='text-center'>Amount</TableHead>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            </TableHeader>
+
+            <TableBody>
+              {salesReport.map((t) => (
+                <TableRow key={t.id}>
+                  <TableCell className='text-center'>
+                    {new Date(t.created_at).toLocaleDateString("en-IN")}
+                  </TableCell>
+
+                  <TableCell className="font-medium text-center">
+                    #{t.id}
+                  </TableCell>
+  <TableCell className="text-center">
+    {t.customer_name || "Walk-in"}
+  </TableCell>
+                  <TableCell className="text-center">
+                    {t.items?.length || 0}
+                  </TableCell>
+
+
+                  <TableCell className="font-semibold text-center">
+               ₹{Number(t.total_amount || 0).toFixed(2)}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
+
+        {/* Mobile Card View */}
+        <div className="md:hidden space-y-3 p-3">
+          {salesReport.map((t) => (
+            <div key={t.id} className="bg-gray-50 rounded-lg p-3 border border-gray-200">
+              <div className="flex justify-between items-start mb-2">
+                <div className="flex-1 min-w-0">
+                  <p className="font-medium text-sm">#{t.id}</p>
+                  <p className="text-xs text-gray-500">{new Date(t.created_at).toLocaleDateString("en-IN")}</p>
+                </div>
+                <span className="font-semibold text-green-600 text-sm">₹{Number(t.total_amount || 0).toFixed(2)}</span>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-2 text-xs mb-2">
+                <div><span className="text-gray-500">Customer:</span> {t.customer_name || "Walk-in"}</div>
+                <div><span className="text-gray-500">Items:</span> {t.items?.length || 0}</div>
+              </div>
+            </div>
+          ))}
+        </div>
+        </>
       )}
     </CardContent>
   </Card>
 </TabsContent>
 
         <TabsContent value="inventory">
-<Card className="border-0 shadow-xl rounded-2xl overflow-hidden">
+<Card className="overflow-hidden">
 
   {/* HEADER */}
-  <CardHeader className="bg-gradient-to-r from-slate-50 to-gray-100 border-b">
+  <CardHeader className="bg-muted/40 border-b">
     
     <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
       
-      <CardTitle className="flex items-center text-xl font-bold text-gray-800">
-        <Package className="h-6 w-6 mr-3 text-blue-600" />
+      <CardTitle className="flex items-center text-xl font-display font-normal">
+        <Package className="h-6 w-6 mr-3" />
         Inventory Health Report
       </CardTitle>
 
@@ -2251,8 +2279,8 @@ const exportReport = (type: string) => {
           variant="outline"
            onClick={() => exportInventoryCSV()}
         >
-          <Download className="h-4 w-4 mr-2" />
-          Export
+          <Download className="h-4 w-4" />
+          <span className="hidden md:inline ml-2">Export</span>
         </Button>
       </div>
 
@@ -2265,173 +2293,220 @@ const exportReport = (type: string) => {
         No inventory data found
       </div>
 
-    ) : (
+) : (
 
-      <div className="rounded-2xl border overflow-hidden">
+  <div className="rounded-2xl border overflow-hidden">
 
-        <div className="max-h-[650px] overflow-auto">
+    {/* Desktop Table View */}
+    <div className="hidden md:block max-h-[650px] overflow-auto">
+      <Table>
 
-          <Table>
+        <TableHeader className="sticky top-0 bg-white z-10 border-b">
 
-            <TableHeader className="sticky top-0 bg-white z-10 border-b">
+          <TableRow className="bg-gray-50">
 
-              <TableRow className="bg-gray-50">
+            <TableHead>Product</TableHead>
+            <TableHead>Category</TableHead>
+            <TableHead>Opening</TableHead>
+            <TableHead>Purchased</TableHead>
+            <TableHead>Rented</TableHead>
+            <TableHead>Available</TableHead>
+            <TableHead>Utilization</TableHead>
+            <TableHead>Unit Price</TableHead>
+            <TableHead>Stock Value</TableHead>
+            <TableHead>Status</TableHead>
 
-                <TableHead>Product</TableHead>
-                <TableHead>Category</TableHead>
-                <TableHead>Opening</TableHead>
-                <TableHead>Purchased</TableHead>
-                <TableHead>Rented</TableHead>
-                <TableHead>Available</TableHead>
-                <TableHead>Utilization</TableHead>
-                <TableHead>Unit Price</TableHead>
-                <TableHead>Stock Value</TableHead>
-                <TableHead>Status</TableHead>
+          </TableRow>
+
+        </TableHeader>
+
+        <TableBody>
+
+          {inventoryReport.map((p) => {
+
+            const utilization =
+              (
+                (
+                  Number(p.outwardMovement || 0) /
+                  Math.max(
+                    (
+                      Number(p.openingStock || 0) +
+                      Number(p.inwardMovement || 0)
+                    ),
+                    1
+                  )
+                ) * 100
+              ).toFixed(1);
+
+            return (
+
+              <TableRow
+                key={p.id}
+                className="hover:bg-gray-50 transition-colors"
+              >
+
+                <TableCell className="font-semibold">
+                  {p.name}
+                </TableCell>
+
+                <TableCell>
+                  {p.category}
+                </TableCell>
+
+                <TableCell>
+                  {p.openingStock} {p.unit}
+                </TableCell>
+
+                <TableCell className="text-green-600 font-medium">
+                  +{p.inwardMovement}
+                </TableCell>
+
+                <TableCell className="text-red-600 font-medium">
+                  -{p.outwardMovement}
+                </TableCell>
+
+                <TableCell className="font-semibold">
+                  {p.closingStock} {p.unit}
+                </TableCell>
+
+                {/* UTILIZATION */}
+                <TableCell>
+
+                  <div className="space-y-1">
+
+                    <div className="flex justify-between text-xs">
+                      <span>
+                        {utilization}%
+                      </span>
+                    </div>
+
+                    <div className="w-24 bg-gray-200 rounded-full h-2">
+
+                      <div
+                        className="bg-primary h-2 rounded-full"
+                        style={{
+                          width: `${Math.min(
+                            Number(utilization),
+                            100
+                          )}%`
+                        }}
+                      />
+
+                    </div>
+
+                  </div>
+
+                </TableCell>
+
+                <TableCell>
+                  ₹{Number(p.unitPrice).toFixed(2)}
+                </TableCell>
+
+                <TableCell className="font-semibold text-blue-700">
+                  ₹{
+                    (
+                      Number(p.closingStock || 0) *
+                      Number(p.unitPrice || 0)
+                    ).toFixed(2)
+                  }
+                </TableCell>
+
+                {/* STATUS */}
+                <TableCell>
+
+                  {(() => {
+
+                    const status =
+                      getStockStatus(
+                        Number(p.closingStock || 0)
+                      );
+
+                    return (
+
+                      <span
+                        className={`
+                          px-3 py-1
+                          rounded-full
+                          text-xs
+                          font-medium
+                          ${status.color}
+                        `}
+                      >
+                        {status.text}
+                      </span>
+
+                    );
+
+                  })()}
+
+                </TableCell>
 
               </TableRow>
 
-            </TableHeader>
+            );
 
-            <TableBody>
+          })}
 
-              {inventoryReport.map((p) => {
+        </TableBody>
 
-                const utilization =
-                  (
-                    (
-                      Number(p.outwardMovement || 0) /
-                      Math.max(
-                        (
-                          Number(p.openingStock || 0) +
-                          Number(p.inwardMovement || 0)
-                        ),
-                        1
-                      )
-                    ) * 100
-                  ).toFixed(1);
+      </Table>
 
-                return (
+    </div>
 
-                  <TableRow
-                    key={p.id}
-                    className="hover:bg-gray-50 transition-colors"
-                  >
+    {/* Mobile Card View */}
+    <div className="md:hidden space-y-3 p-3">
+      {inventoryReport.map((p) => {
+        const utilization = (
+          (
+            Number(p.outwardMovement || 0) /
+            Math.max(
+              (
+                Number(p.openingStock || 0) +
+                Number(p.inwardMovement || 0)
+              ),
+              1
+            )
+          ) * 100
+        ).toFixed(1);
+        const status = getStockStatus(Number(p.closingStock || 0));
+        return (
+          <div key={p.id} className="bg-gray-50 rounded-lg p-3 border border-gray-200">
+            <div className="flex justify-between items-start mb-2">
+              <div className="flex-1 min-w-0">
+                <p className="font-medium text-sm truncate">{p.name}</p>
+                <p className="text-xs text-gray-500">{p.category}</p>
+              </div>
+              <span className={`px-2 py-1 rounded-full text-xs font-medium ml-2 flex-shrink-0 ${status.color}`}>
+                {status.text}
+              </span>
+            </div>
 
-                    <TableCell className="font-semibold">
-                      {p.name}
-                    </TableCell>
+            <div className="grid grid-cols-2 gap-2 mb-2 text-xs">
+              <div><span className="text-gray-500">Opening:</span> {p.openingStock} {p.unit}</div>
+              <div><span className="text-gray-500">Purchased:</span> <span className="text-green-600">+{p.inwardMovement}</span></div>
+              <div><span className="text-gray-500">Rented:</span> <span className="text-red-600">-{p.outwardMovement}</span></div>
+              <div><span className="text-gray-500">Available:</span> <span className="font-medium">{p.closingStock} {p.unit}</span></div>
+              <div><span className="text-gray-500">Unit Price:</span> ₹{Number(p.unitPrice).toFixed(2)}</div>
+              <div><span className="text-gray-500">Stock Value:</span> <span className="text-blue-700 font-medium">₹{(Number(p.closingStock || 0) * Number(p.unitPrice || 0)).toFixed(2)}</span></div>
+            </div>
 
-                    <TableCell>
-                      {p.category}
-                    </TableCell>
-
-                    <TableCell>
-                      {p.openingStock} {p.unit}
-                    </TableCell>
-
-                    <TableCell className="text-green-600 font-medium">
-                      +{p.inwardMovement}
-                    </TableCell>
-
-                    <TableCell className="text-red-600 font-medium">
-                      -{p.outwardMovement}
-                    </TableCell>
-
-                    <TableCell className="font-semibold">
-                      {p.closingStock} {p.unit}
-                    </TableCell>
-
-                    {/* UTILIZATION */}
-                    <TableCell>
-
-                      <div className="space-y-1">
-
-                        <div className="flex justify-between text-xs">
-                          <span>
-                            {utilization}%
-                          </span>
-                        </div>
-
-                        <div className="w-24 bg-gray-200 rounded-full h-2">
-
-                          <div
-                            className="bg-blue-600 h-2 rounded-full"
-                            style={{
-                              width: `${Math.min(
-                                Number(utilization),
-                                100
-                              )}%`
-                            }}
-                          />
-
-                        </div>
-
-                      </div>
-
-                    </TableCell>
-
-                    <TableCell>
-                      ₹{Number(p.unitPrice).toFixed(2)}
-                    </TableCell>
-
-                    <TableCell className="font-semibold text-blue-700">
-                      ₹{
-                        (
-                          Number(p.closingStock || 0) *
-                          Number(p.unitPrice || 0)
-                        ).toFixed(2)
-                      }
-                    </TableCell>
-
-                    {/* STATUS */}
-<TableCell>
-
-  {(() => {
-
-    const status =
-      getStockStatus(
-        Number(p.closingStock || 0)
-      );
-
-    return (
-
-      <span
-        className={`
-          px-3 py-1
-          rounded-full
-          text-xs
-          font-medium
-          ${status.color}
-        `}
-      >
-        {status.text}
-      </span>
-
-    );
-
-  })()}
-
-</TableCell>
-
-                  </TableRow>
-
-                );
-
-              })}
-
-            </TableBody>
-
-          </Table>
-
-        </div>
-
-      </div>
-
-    )}
-
-  </CardContent>
-
-</Card>
+            <div className="mb-2">
+              <div className="flex justify-between text-xs mb-1">
+                <span className="text-gray-500">Utilization:</span>
+                <span>{utilization}%</span>
+              </div>
+              <div className="w-full bg-gray-200 rounded-full h-2">
+                <div className="bg-primary h-2 rounded-full" style={{ width: `${Math.min(Number(utilization), 100)}%` }} />
+              </div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  </div>
+      )}
+    </CardContent>
+  </Card>
         </TabsContent>
 
         <TabsContent value="products">
@@ -2580,65 +2655,65 @@ const exportReport = (type: string) => {
     {/* TOP KPI SECTION */}
     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
 
-      <Card className="border-0 shadow-lg rounded-2xl bg-gradient-to-br from-green-50 to-green-100">
+      <Card>
         <CardContent className="p-5">
-          <p className="text-sm text-green-700 font-medium">
+          <p className="text-sm text-muted-foreground font-medium">
             Total Sales
           </p>
 
-          <h2 className="text-3xl font-bold text-green-700 mt-2">
+          <h2 className="text-3xl font-semibold mt-2">
             ₹{totalRevenue.toFixed(2)}
           </h2>
 
-          <p className="text-xs text-green-600 mt-1">
+          <p className="text-xs text-muted-foreground mt-1">
             Overall business revenue
           </p>
         </CardContent>
       </Card>
 
-      <Card className="border-0 shadow-lg rounded-2xl bg-gradient-to-br from-red-50 to-red-100">
+      <Card>
         <CardContent className="p-5">
-          <p className="text-sm text-red-700 font-medium">
+          <p className="text-sm text-muted-foreground font-medium">
             Total Tax
           </p>
 
-          <h2 className="text-3xl font-bold text-red-600 mt-2">
+          <h2 className="text-3xl font-semibold mt-2">
             ₹{taxData.totalTax.toFixed(2)}
           </h2>
 
-          <p className="text-xs text-red-500 mt-1">
+          <p className="text-xs text-muted-foreground mt-1">
             GST collected from sales
           </p>
         </CardContent>
       </Card>
 
-<Card className="border-0 shadow-lg rounded-2xl bg-gradient-to-br from-blue-50 to-blue-100">
+<Card>
   <CardContent className="p-5">
-    <p className="text-sm text-blue-700 font-medium">
+    <p className="text-sm text-muted-foreground font-medium">
       Net Revenue
     </p>
 
-    <h2 className="text-3xl font-bold text-blue-700 mt-2">
+    <h2 className="text-3xl font-semibold mt-2">
       ₹{(totalRevenue - taxData.totalTax).toFixed(2)}
     </h2>
 
-    <p className="text-xs text-blue-500 mt-1">
+    <p className="text-xs text-muted-foreground mt-1">
       Revenue after tax deduction
     </p>
   </CardContent>
 </Card>
 
-<Card className="border-0 shadow-lg rounded-2xl bg-gradient-to-br from-orange-50 to-orange-100">
+<Card>
   <CardContent className="p-5">
-    <p className="text-sm text-orange-700 font-medium">
+    <p className="text-sm text-muted-foreground font-medium">
       Outstanding Balance
     </p>
 
-    <h2 className="text-3xl font-bold text-orange-700 mt-2">
+    <h2 className="text-3xl font-semibold mt-2">
       ₹{outstandingBalance.toFixed(2)}
     </h2>
 
-    <p className="text-xs text-orange-500 mt-1">
+    <p className="text-xs text-muted-foreground mt-1">
       Pending customer payments
     </p>
   </CardContent>
@@ -2762,14 +2837,14 @@ const exportReport = (type: string) => {
     </div>
 
     {/* REVENUE SECTION */}
-    <Card className="border-0 shadow-xl rounded-2xl overflow-hidden">
+    <Card className="overflow-hidden">
 
-      <div className="bg-gradient-to-r from-indigo-600 to-purple-600 p-5">
-        <h2 className="text-white text-xl font-bold">
+      <div className="bg-muted/50 p-5 border-b">
+        <h2 className="font-display text-2xl">
           Revenue Overview
         </h2>
 
-        <p className="text-indigo-100 text-sm mt-1">
+        <p className="text-muted-foreground text-sm mt-1">
           Collection and pending analytics
         </p>
       </div>
@@ -2883,13 +2958,15 @@ const exportReport = (type: string) => {
 </div>
         <div className="flex items-end">
        <Button className="w-full" onClick={exportCustomerCSV}>
-  Export CSV
+  <Download className="h-4 w-4" />
+  <span className="hidden md:inline ml-2">Export CSV</span>
 </Button>
         </div>
       </div>
 
       {/* TABLE */}
-   <div className="border rounded-lg overflow-x-auto">
+   {/* Desktop Table View */}
+   <div className="hidden md:block border rounded-lg overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow>
@@ -3035,6 +3112,66 @@ const exportReport = (type: string) => {
 )}
         </Table>
 </div>
+
+{/* Mobile Card View */}
+<div className="md:hidden space-y-3 p-3">
+  {filteredCustomerReport.length === 0 ? (
+    <div className="text-center py-12 text-gray-500">
+      No matching customers found
+    </div>
+  ) : (
+    filteredCustomerReport.map((c, index) => {
+      const subtotal = Number(c.total || 0);
+      const transport = Number(c.transport || 0);
+      const gstRate = GST || 0;
+      const gstAmount = subtotal * gstRate;
+      const transportGST = transport * gstRate;
+      const finalTotal = subtotal + gstAmount + transport + transportGST;
+
+      return (
+        <div key={c.id} className="bg-gray-50 rounded-lg p-3 border border-gray-200">
+          <div className="flex justify-between items-start mb-2">
+            <div className="flex-1 min-w-0">
+              <p className="font-medium text-sm">#{index + 1} {c.name}</p>
+              <p className="text-xs text-gray-500">{c.gstin || "-"}</p>
+            </div>
+            <span className="font-semibold text-green-600 text-sm">₹{finalTotal.toFixed(2)}</span>
+          </div>
+          
+          <div className="grid grid-cols-2 gap-2 text-xs">
+            <div><span className="text-gray-500">Subtotal:</span> ₹{subtotal.toFixed(2)}</div>
+            <div><span className="text-gray-500">GST:</span> ₹{gstAmount.toFixed(2)}</div>
+            <div><span className="text-gray-500">Transport:</span> ₹{transport.toFixed(2)}</div>
+            <div><span className="text-gray-500">Transport GST:</span> ₹{transportGST.toFixed(2)}</div>
+          </div>
+        </div>
+      );
+    })
+  )}
+  
+  {/* Mobile Total */}
+  {filteredCustomerReport.length > 0 && (() => {
+    const gstRate = GST || 0;
+    const totals = filteredCustomerReport.reduce(
+      (acc, c) => {
+        const subtotal = Number(c.total || 0);
+        const transport = Number(c.transport || 0);
+        acc.subtotal += subtotal;
+        acc.gst += subtotal * gstRate;
+        acc.transport += transport;
+        acc.transportGST += transport * gstRate;
+        acc.final += subtotal + subtotal * gstRate + transport + transport * gstRate;
+        return acc;
+      },
+      { subtotal: 0, gst: 0, transport: 0, transportGST: 0, final: 0 }
+    );
+    return (
+      <div className="bg-gray-100 rounded-lg p-3 mt-4">
+        <p className="font-semibold text-sm text-center">Total: ₹{totals.final.toFixed(2)}</p>
+      </div>
+    );
+  })()}
+</div>
     </CardContent>
   </Card>
 </TabsContent>
@@ -3077,7 +3214,8 @@ const exportReport = (type: string) => {
         size="sm"
         className="w-full sm:w-auto px-4"
       >
-        Export Excel
+        <Download className="h-4 w-4" />
+        <span className="hidden md:inline ml-2">Export Excel</span>
       </Button>
 
     </div>
@@ -3086,222 +3224,131 @@ const exportReport = (type: string) => {
 
   <CardContent>
 
-    <div className="border rounded-lg overflow-auto">
-
+    {/* Desktop Table View */}
+    <div className="hidden md:block border rounded-lg overflow-auto">
       <Table>
-
         <TableHeader>
-
           <TableRow>
               <TableHead className="min-w-[220px]">
                 Customer
               </TableHead>
-
-              <TableHead>
-                FY
-              </TableHead>
-
-              <TableHead className="text-right">
-                Apr
-              </TableHead>
-
-              <TableHead className="text-right">
-                May
-              </TableHead>
-
-              <TableHead className="text-right">
-                Jun
-              </TableHead>
-
-              <TableHead className="text-right">
-                Jul
-              </TableHead>
-
-              <TableHead className="text-right">
-                Aug
-              </TableHead>
-
-              <TableHead className="text-right">
-                Sep
-              </TableHead>
-
-              <TableHead className="text-right">
-                Oct
-              </TableHead>
-
-              <TableHead className="text-right">
-                Nov
-              </TableHead>
-
-              <TableHead className="text-right">
-                Dec
-              </TableHead>
-
-              <TableHead className="text-right">
-                Jan
-              </TableHead>
-
-              <TableHead className="text-right">
-                Feb
-              </TableHead>
-
-              <TableHead className="text-right">
-                Mar
-              </TableHead>
-
-              <TableHead className="text-right font-bold">
-                Total
-              </TableHead>
-
-              <TableHead className="text-right text-green-600">
-                Received
-              </TableHead>
-
-              <TableHead className="text-right text-red-600">
-                Balance
-              </TableHead>
-
+              <TableHead>FY</TableHead>
+              <TableHead className="text-right">Apr</TableHead>
+              <TableHead className="text-right">May</TableHead>
+              <TableHead className="text-right">Jun</TableHead>
+              <TableHead className="text-right">Jul</TableHead>
+              <TableHead className="text-right">Aug</TableHead>
+              <TableHead className="text-right">Sep</TableHead>
+              <TableHead className="text-right">Oct</TableHead>
+              <TableHead className="text-right">Nov</TableHead>
+              <TableHead className="text-right">Dec</TableHead>
+              <TableHead className="text-right">Jan</TableHead>
+              <TableHead className="text-right">Feb</TableHead>
+              <TableHead className="text-right">Mar</TableHead>
+              <TableHead className="text-right font-bold">Total</TableHead>
+              <TableHead className="text-right text-green-600">Received</TableHead>
+              <TableHead className="text-right text-red-600">Balance</TableHead>
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {filteredYearlyReport.length === 0 ? (
+            <TableRow>
+              <TableCell colSpan={17} className="text-center py-10 text-gray-500">
+                No report data found
+              </TableCell>
             </TableRow>
+          ) : (
+            filteredYearlyReport.map((row: any, index: number) => {
+              const previousCustomer = index > 0 ? filteredYearlyReport[index - 1].customer_name : null;
+              const isNewCustomer = previousCustomer !== row.customer_name;
+              return (
+                <React.Fragment key={index}>
+                  {isNewCustomer && index !== 0 && (
+                    <TableRow>
+                      <TableCell colSpan={17} className="h-3 bg-slate-100 border-0 p-0" />
+                    </TableRow>
+                  )}
+                  <TableRow className={`hover:bg-slate-50 ${isNewCustomer ? 'bg-slate-50/50' : ''}`}>
+                    <TableCell className="font-semibold whitespace-nowrap">{row.customer_name}</TableCell>
+                    <TableCell className="font-medium">{row.financial_year}</TableCell>
+                    <TableCell className="text-right">₹{Number(row.apr || 0).toFixed(2)}</TableCell>
+                    <TableCell className="text-right">₹{Number(row.may || 0).toFixed(2)}</TableCell>
+                    <TableCell className="text-right">₹{Number(row.jun || 0).toFixed(2)}</TableCell>
+                    <TableCell className="text-right">₹{Number(row.jul || 0).toFixed(2)}</TableCell>
+                    <TableCell className="text-right">₹{Number(row.aug || 0).toFixed(2)}</TableCell>
+                    <TableCell className="text-right">₹{Number(row.sep || 0).toFixed(2)}</TableCell>
+                    <TableCell className="text-right">₹{Number(row.oct || 0).toFixed(2)}</TableCell>
+                    <TableCell className="text-right">₹{Number(row.nov || 0).toFixed(2)}</TableCell>
+                    <TableCell className="text-right">₹{Number(row.dec || 0).toFixed(2)}</TableCell>
+                    <TableCell className="text-right">₹{Number(row.jan || 0).toFixed(2)}</TableCell>
+                    <TableCell className="text-right">₹{Number(row.feb || 0).toFixed(2)}</TableCell>
+                    <TableCell className="text-right">₹{Number(row.mar || 0).toFixed(2)}</TableCell>
+                    <TableCell className="text-right font-bold">₹{Number(row.total || 0).toFixed(2)}</TableCell>
+                    <TableCell className="text-right text-green-600 font-semibold">₹{Number(row.received || 0).toFixed(2)}</TableCell>
+                    <TableCell className={`text-right font-bold ${Number(row.balance) > 0 ? "text-red-600" : "text-green-600"}`}>
+                      ₹{Number(row.balance || 0).toFixed(2)}
+                    </TableCell>
+                  </TableRow>
+                </React.Fragment>
+              );
+            })
+          )}
+        </TableBody>
+      </Table>
+    </div>
 
-          </TableHeader>
-
-          <TableBody>
-
-            {filteredYearlyReport.length === 0? (
-
-              <TableRow>
-                <TableCell
-                  colSpan={17}
-                  className="text-center py-10 text-gray-500"
-                >
-                  No report data found
-                </TableCell>
-              </TableRow>
-
-            ) : (
-
-filteredYearlyReport.map((row: any, index: number) => {
-
-  const previousCustomer =
-    index > 0
-      ? filteredYearlyReport[index - 1].customer_name
-      : null;
-
-  const isNewCustomer =
-    previousCustomer !== row.customer_name;
-
-  return (
-
-    <React.Fragment key={index}>
-
-      {/* SPACE BETWEEN CUSTOMERS */}
-      {isNewCustomer && index !== 0 && (
-        <TableRow>
-          <TableCell
-            colSpan={17}
-            className="h-3 bg-slate-100 border-0 p-0"
-          />
-        </TableRow>
+    {/* Mobile Card View */}
+    <div className="md:hidden space-y-3 p-3">
+      {filteredYearlyReport.length === 0 ? (
+        <div className="text-center py-10 text-gray-500">No report data found</div>
+      ) : (
+        filteredYearlyReport.map((row: any, index: number) => {
+          const previousCustomer = index > 0 ? filteredYearlyReport[index - 1].customer_name : null;
+          const isNewCustomer = previousCustomer !== row.customer_name;
+          return (
+            <div key={index} className={`${isNewCustomer && index !== 0 ? 'mt-4' : ''}`}>
+              <div className="bg-gray-50 rounded-lg p-3 border border-gray-200">
+                <div className="flex justify-between items-start mb-2">
+                  <div className="flex-1 min-w-0">
+                    <p className="font-medium text-sm">{row.customer_name}</p>
+                    <p className="text-xs text-gray-500">FY: {row.financial_year}</p>
+                  </div>
+                  <span className={`font-semibold text-sm ${Number(row.balance) > 0 ? "text-red-600" : "text-green-600"}`}>
+                    ₹{Number(row.balance || 0).toFixed(2)}
+                  </span>
+                </div>
+                
+                <div className="grid grid-cols-3 gap-2 mb-2 text-xs">
+                  <div><span className="text-gray-500">Apr:</span> ₹{Number(row.apr || 0).toFixed(0)}</div>
+                  <div><span className="text-gray-500">May:</span> ₹{Number(row.may || 0).toFixed(0)}</div>
+                  <div><span className="text-gray-500">Jun:</span> ₹{Number(row.jun || 0).toFixed(0)}</div>
+                  <div><span className="text-gray-500">Jul:</span> ₹{Number(row.jul || 0).toFixed(0)}</div>
+                  <div><span className="text-gray-500">Aug:</span> ₹{Number(row.aug || 0).toFixed(0)}</div>
+                  <div><span className="text-gray-500">Sep:</span> ₹{Number(row.sep || 0).toFixed(0)}</div>
+                  <div><span className="text-gray-500">Oct:</span> ₹{Number(row.oct || 0).toFixed(0)}</div>
+                  <div><span className="text-gray-500">Nov:</span> ₹{Number(row.nov || 0).toFixed(0)}</div>
+                  <div><span className="text-gray-500">Dec:</span> ₹{Number(row.dec || 0).toFixed(0)}</div>
+                  <div><span className="text-gray-500">Jan:</span> ₹{Number(row.jan || 0).toFixed(0)}</div>
+                  <div><span className="text-gray-500">Feb:</span> ₹{Number(row.feb || 0).toFixed(0)}</div>
+                  <div><span className="text-gray-500">Mar:</span> ₹{Number(row.mar || 0).toFixed(0)}</div>
+                </div>
+                
+                <div className="flex justify-between items-center text-xs border-t pt-2">
+                  <div>
+                    <span className="text-gray-500">Total:</span> <span className="font-medium">₹{Number(row.total || 0).toFixed(2)}</span>
+                  </div>
+                  <div>
+                    <span className="text-gray-500">Received:</span> <span className="text-green-600 font-medium">₹{Number(row.received || 0).toFixed(2)}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })
       )}
+    </div>
 
-      {/* DATA ROW */}
-      <TableRow
-        className={`
-          hover:bg-slate-50
-          ${isNewCustomer ? 'bg-slate-50/50' : ''}
-        `}
-      >
-
-        <TableCell className="font-semibold whitespace-nowrap">
-          {row.customer_name}
-        </TableCell>
-
-        <TableCell className="font-medium">
-          {row.financial_year}
-        </TableCell>
-
-        <TableCell className="text-right">
-          ₹{Number(row.apr || 0).toFixed(2)}
-        </TableCell>
-
-        <TableCell className="text-right">
-          ₹{Number(row.may || 0).toFixed(2)}
-        </TableCell>
-
-        <TableCell className="text-right">
-          ₹{Number(row.jun || 0).toFixed(2)}
-        </TableCell>
-
-        <TableCell className="text-right">
-          ₹{Number(row.jul || 0).toFixed(2)}
-        </TableCell>
-
-        <TableCell className="text-right">
-          ₹{Number(row.aug || 0).toFixed(2)}
-        </TableCell>
-
-        <TableCell className="text-right">
-          ₹{Number(row.sep || 0).toFixed(2)}
-        </TableCell>
-
-        <TableCell className="text-right">
-          ₹{Number(row.oct || 0).toFixed(2)}
-        </TableCell>
-
-        <TableCell className="text-right">
-          ₹{Number(row.nov || 0).toFixed(2)}
-        </TableCell>
-
-        <TableCell className="text-right">
-          ₹{Number(row.dec || 0).toFixed(2)}
-        </TableCell>
-
-        <TableCell className="text-right">
-          ₹{Number(row.jan || 0).toFixed(2)}
-        </TableCell>
-
-        <TableCell className="text-right">
-          ₹{Number(row.feb || 0).toFixed(2)}
-        </TableCell>
-
-        <TableCell className="text-right">
-          ₹{Number(row.mar || 0).toFixed(2)}
-        </TableCell>
-
-        <TableCell className="text-right font-bold">
-          ₹{Number(row.total || 0).toFixed(2)}
-        </TableCell>
-
-        <TableCell className="text-right text-green-600 font-semibold">
-          ₹{Number(row.received || 0).toFixed(2)}
-        </TableCell>
-
-        <TableCell
-          className={`text-right font-bold ${
-            Number(row.balance) > 0
-              ? "text-red-600"
-              : "text-green-600"
-          }`}
-        >
-          ₹{Number(row.balance || 0).toFixed(2)}
-        </TableCell>
-
-      </TableRow>
-
-    </React.Fragment>
-
-  );
-})
-
-            )}
-
-          </TableBody>
-
-        </Table>
-
-      </div>
-
-    </CardContent>
+  </CardContent>
 
   </Card>
 
@@ -3408,7 +3455,7 @@ filteredYearlyReport.map((row: any, index: number) => {
       className="gap-2"
     >
       <Download className="h-4 w-4" />
-      Export Excel
+      <span className="hidden md:inline">Export Excel</span>
     </Button>
 
   </div>

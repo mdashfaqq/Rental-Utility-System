@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Trash2, XCircle } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
+import { Loading } from "@/components/ui/loading";
 
 export const DeliveryChallanDetails = ({
   id,
@@ -359,7 +360,7 @@ const handlePrint = () => {
   };
 
   if (!id) return <div className="p-4">Invalid Challan</div>;
-  if (!challan) return <div className="p-4">Loading...</div>;
+  if (!challan) return <Loading message="Loading challan" className="min-h-[400px]" />;
 
   const status = getStatus();
 
@@ -510,13 +511,13 @@ status === "ongoing"
 
       <button
         onClick={handlePrint}
-        className="bg-green-600 text-white px-4 py-2 rounded"
+        className="bg-primary text-primary-foreground px-4 py-2 rounded-xl"
       >
         Print
       </button>
       <button
         onClick={handleDownloadPDF}
-        className="bg-blue-600 text-white px-4 py-2 rounded"
+        className="bg-primary text-primary-foreground px-4 py-2 rounded-xl"
       >
         Download PDF
       </button>
@@ -529,13 +530,13 @@ status === "ongoing"
       setSelectedChallanId(id);
       setActiveTab("return-challan");
     }}
-    className="bg-blue-600 text-white px-4 py-2 rounded"
+    className="bg-primary text-primary-foreground px-4 py-2 rounded-xl"
   >
     Return & Inspect
   </button>
 )}
       <Button
-  className="bg-blue-600 hover:bg-blue-700"
+  className=""
   onClick={handleSharePDF}
 >
   Share PDF

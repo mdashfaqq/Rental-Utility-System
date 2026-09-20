@@ -11,6 +11,7 @@ import { Login } from '@/components/auth/Login';
 import 'react-toastify/dist/ReactToastify.css';
 import React from "react";
 import { useAuth } from "./components/auth/AuthContext";
+import { Loading } from "@/components/ui/loading";
 import { QuotationDetails } from "@/components/QuotationDetails";
 import { QuotationList } from "@/components/QuotationList";
 import { DeliveryChallanList } from "@/components/DeliveryChallanList";
@@ -24,7 +25,7 @@ const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
 
   // ⛔ WAIT until auth is resolved
   if (loading) {
-    return <div className="p-6 text-center">Checking session...</div>;
+    return <Loading message="Checking session" className="min-h-screen" />;
   }
 
   return user ? children : <Navigate to="/login" replace />;

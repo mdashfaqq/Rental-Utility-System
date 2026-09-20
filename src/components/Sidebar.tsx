@@ -1,8 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   LayoutDashboard, ShoppingCart, Package, Users, Grid, Box, Settings,
-  BarChart3, Database, ChevronDown, ChevronRight, LogOut, Store, PlusSquare,
-  MinusSquare, Activity, Eye 
+  BarChart3, Database, ChevronDown, LogOut, Store, PlusSquare,
+  MinusSquare, Activity, FileText, ClipboardList, Truck, Receipt
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useLanguage } from '@/contexts/LanguageContext';
@@ -12,22 +12,23 @@ import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
 import { useAuth } from '@/components/auth/AuthContext';
-import { FileText, ClipboardList, Truck, Receipt } from "lucide-react";
 
 interface SidebarProps {
   activeTab: string;
   onTabChange: (tab: string) => void;
+  isMobileMenuOpen?: boolean;
+  onMobileMenuClose?: () => void;
 }
 
-export const Sidebar = ({ activeTab, onTabChange }: SidebarProps) => {
+export const Sidebar = ({ activeTab, onTabChange, isMobileMenuOpen, onMobileMenuClose }: SidebarProps) => {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [expandedMenus, setExpandedMenus] = useState<{ [key: string]: boolean }>({});
   const [searchQuery, setSearchQuery] = useState('');
-  const [notifications] = useState(0);
   const { t } = useLanguage();
   const { storeSettings } = useAppSettings();
   const navigate = useNavigate();
   const { user, logout } = useAuth();
+  const [isMobile, setIsMobile] = useState(false);
 
   const displayUser = {
     name: user?.username || (user as any)?.full_name || 'User',
@@ -59,67 +60,59 @@ export const Sidebar = ({ activeTab, onTabChange }: SidebarProps) => {
     }
   };
 
-  const menuItems = [
-    { id: 'dashboard', icon: LayoutDashboard, label: t('Dashboard'), badge: null, color: 'text-blue-600', bgColor: 'bg-blue-100' },
-    { id: 'pos', icon: ShoppingCart, label: t('POS System'), color: 'text-green-600', bgColor: 'bg-green-100' },
-    { id: 'inventory', icon: Package, label: t('Inventory'), badge: notifications > 0 ? notifications.toString() : null, color: 'text-purple-600', bgColor: 'bg-purple-100' },
-    // { id: 'prescriptions', icon: Eye, label: 'Glass Prescription', color: 'text-rose-600', bgColor: 'bg-rose-100' },
-       {
-      id: 'masters', icon: Database, label: 'Masters', isExpandable: true, color: 'text-indigo-600', bgColor: 'bg-indigo-100',
-      submenu: [
-        { id: 'master-products', label: 'Product Master', icon: Box, color: 'text-orange-600' },
-        { id: 'master-categories', label: 'Category Master', icon: Grid, color: 'text-pink-600' },
-        {id: 'master-subcategories', label: 'Subcategory Master', icon: Grid, color: 'text-pink-600' },
-        { id: 'master-vendors', label: 'Vendor Master', icon: Users, color: 'text-teal-600' },
-          { id: 'master-customers', label: 'Customer Master', icon: Users, color: 'text-blue-600' }
-      ]
-    }, 
-{
-  id: 'rental',
-  icon: FileText, // better than Database (documents module)
-  label: 'Rental',
-  isExpandable: true,
-  color: 'text-indigo-600',
-  bgColor: 'bg-indigo-100',
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 1024);
+      if (window.innerWidth < 1024) {
+        setIsCollapsed(false);
+      }
+    };
 
-  submenu: [
-    {
-      id: 'rental-quotations',
-      label: 'Quotations',
-      icon: ClipboardList,
-      color: 'text-blue-600',
-      path: '/quotation-list' // 👈 add path for direct navigation, 
-    },
-    {
-      id: 'delivery-challans',
-      label: 'Delivery Challans',
-      icon: Truck,
-      color: 'text-orange-600',
-    },
-    {
-      id: 'invoices',
-      label: 'Invoices',
-      icon: Receipt,
-      color: 'text-green-600'
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const handleTabChange = (tab: string) => {
+    onTabChange(tab);
+    if (isMobile && onMobileMenuClose) {
+      onMobileMenuClose();
     }
-  ]
-},
-{
-  id: 'ledger-list',
-  icon: Users,
-  label: 'Customer Ledger',
-  color: 'text-indigo-600',
-  bgColor: 'bg-indigo-100'
-},
-    { id: 'reports', icon: BarChart3, label: 'Reports & Analytics', color: 'text-yellow-600', bgColor: 'bg-yellow-100' },
-    { id: 'settings', icon: Settings, label: t('Settings'), color: 'text-gray-600', bgColor: 'bg-gray-100' }
-  ];
+  };
 
-  const quickActions = [
-    { id: 'new-sale', icon: PlusSquare, label: 'New Sale', color: 'text-green-600' },
-    // { id: 'prescriptions', icon: Eye, label: 'Prescription', color: 'text-rose-600' },
-    { id: 'add-product', icon: Package, label: 'Add Product', color: 'text-blue-600' },
-    { id: 'view-reports', icon: BarChart3, label: 'Reports', color: 'text-purple-600' },
+  const isItemActive = (item: { id: string; submenu?: { id: string }[] }) => {
+    if (activeTab === item.id) return true;
+    return item.submenu?.some(sub => sub.id === activeTab);
+  };
+
+  const menuItems = [
+    { id: 'dashboard', icon: LayoutDashboard, label: t('Dashboard') },
+    { id: 'pos', icon: ShoppingCart, label: t('POS System') },
+    { id: 'inventory', icon: Package, label: t('Inventory') },
+    {
+      id: 'masters', icon: Database, label: 'Masters', isExpandable: true,
+      submenu: [
+        { id: 'master-products', label: 'Product Master', icon: Box },
+        { id: 'master-categories', label: 'Category Master', icon: Grid },
+        { id: 'master-subcategories', label: 'Subcategory Master', icon: Grid },
+        { id: 'master-vendors', label: 'Vendor Master', icon: Users },
+        { id: 'master-customers', label: 'Customer Master', icon: Users }
+      ]
+    },
+    {
+      id: 'rental',
+      icon: FileText,
+      label: 'Rental',
+      isExpandable: true,
+      submenu: [
+        { id: 'rental-quotations', label: 'Quotations', icon: ClipboardList },
+        { id: 'delivery-challans', label: 'Delivery Challans', icon: Truck },
+        { id: 'invoices', label: 'Invoices', icon: Receipt }
+      ]
+    },
+    { id: 'ledger-list', icon: Users, label: 'Customer Ledger' },
+    { id: 'reports', icon: BarChart3, label: 'Reports & Analytics' },
+    { id: 'settings', icon: Settings, label: t('Settings') }
   ];
 
   const filteredMenuItems = menuItems.filter(item =>
@@ -128,298 +121,150 @@ export const Sidebar = ({ activeTab, onTabChange }: SidebarProps) => {
 
   return (
     <TooltipProvider>
-      <div className="h-full">
-        <div className={`
-  bg-gradient-to-b
-  from-white via-gray-50 to-gray-100
-  shadow-2xl
-  transition-[width]
-  duration-300
-  ease-in-out
-  ${isCollapsed ? 'w-20' : 'w-72'}
-  h-full
-  flex
-  flex-col
-  border-r
-  border-gray-200
-  overflow-hidden
-`}>
-          
-{/* Header: Logo + Collapse */}
-<div className="p-4 flex items-center justify-between border-b border-gray-200 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+      <div className={`h-full ${isMobile ? '' : 'p-3 pr-0'}`}>
+        {isMobile && isMobileMenuOpen && (
+          <div
+            className="fixed inset-0 bg-ink/30 backdrop-blur-sm z-40 lg:hidden"
+            onClick={onMobileMenuClose}
+          />
+        )}
 
-  {/* LEFT */}
-<div
-  className={`
-    flex items-center
-    overflow-hidden
-    flex-1 min-w-0
-    transition-all duration-300
-    ${isCollapsed ? 'w-0 opacity-0' : 'opacity-100'}
-  `}
->
-
-  {/* LOGO */}
-  <div
-    className="
-      flex items-center justify-center
-      w-10 h-10 min-w-[40px]
-      rounded-2xl
-      bg-white/10
-      backdrop-blur-md
-      border border-white/10
-      shadow-sm
-    "
-  >
-    <Store className="h-5 w-5 text-white" />
-  </div>
-
-  {/* TEXT */}
-  <div className="ml-3 min-w-0">
-
-    <h1
-      className="
-        text-sm font-semibold
-        text-white
-        truncate
-        tracking-tight
-        leading-none
-      "
-    >
-      {storeSettings.name}
-    </h1>
-
-    <p
-      className="
-        mt-1
-        text-[11px]
-        text-white/60
-        truncate
-        font-medium
-      "
-    >
-      POS Workspace
-    </p>
-
-  </div>
-
-</div>
-
-  {/* BUTTON */}
-  <button
-    onClick={() => setIsCollapsed(!isCollapsed)}
-    className="
-      ml-2
-      min-w-[36px]
-      h-9
-      w-9
-      flex
-      items-center
-      justify-center
-      rounded-lg
-      hover:bg-white/20
-      transition
-      flex-shrink-0
-    "
-  >
-    {isCollapsed
-      ? <PlusSquare className="h-4 w-4" />
-      : <MinusSquare className="h-4 w-4" />
-    }
-  </button>
-
-</div>
-
-          {/* User Profile */}
-<div
-  className={`
-    overflow-hidden
-    transition-all
-    duration-300
-    border-b border-gray-200
-    bg-gradient-to-r from-gray-50 to-blue-50
-    ${isCollapsed ? 'max-h-0 opacity-0 p-0' : 'max-h-40 opacity-100 p-4'}
-  `}
->
-  <div className="flex items-center space-x-3">
-    <Avatar className="ring-2 ring-blue-200">
-      <AvatarImage src={displayUser.avatar} />
-      <AvatarFallback className="bg-zinc-900 text-white">
-        {initials}
-      </AvatarFallback>
-    </Avatar>
-
-    <div className="flex-1 min-w-0">
-      <p className="text-sm font-semibold text-gray-900 truncate">
-        {displayUser.name}
-      </p>
-
-<Badge className="bg-sky-100 text-sky-700 hover:bg-sky-100 text-xs px-2 py-0">
-  {displayUser.role}
-</Badge>
-    </div>
-  </div>
-</div>
-
-          {/* Search */}
-<div
-  className={`
-    overflow-hidden
-    transition-all
-    duration-300
-    border-b border-gray-200
-    ${isCollapsed ? 'max-h-0 opacity-0 p-0' : 'max-h-32 opacity-100 p-4'}
-  `}
->
-  <input
-    type="text"
-    placeholder="Search menu items..."
-    value={searchQuery}
-    onChange={e => setSearchQuery(e.target.value)}
-    className="w-full px-3 py-2 bg-gray-100 border border-gray-200 rounded-lg text-sm focus:outline-none"
-  />
-</div>
-          
-          {/* Quick Actions */}
-          {!isCollapsed && (
-            <div className="p-4 border-b border-gray-200">
-              <div className="grid grid-cols-3 gap-2">
-                {quickActions.map(action => (
-                  <Tooltip key={action.id}>
-                    <TooltipTrigger asChild>
-                      <button
-                        onClick={() => {
-  switch (action.id) {
-    case 'new-sale':
-      onTabChange('pos');
-      break;
-    case 'add-product':
-      onTabChange('master-products');
-      break;
-    case 'view-reports':
-      onTabChange('reports');
-      break;
-    default:
-      onTabChange(action.id);
-  }
-}}
-                        className="p-3 bg-white rounded-lg hover:bg-gray-100 border border-gray-200 group w-full flex items-center justify-center"
-                        title={action.label}
-                      >
-                        <action.icon className={`h-5 w-5 ${action.color}`} />
-                      </button>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>{action.label}</p>
-                    </TooltipContent>
-                  </Tooltip>
-                ))}
+        <aside
+          className={`
+            soft-panel rounded-3xl
+            transition-[width,transform] duration-300 ease-out
+            ${isCollapsed ? 'w-[76px]' : 'w-72'}
+            ${isMobile ? 'fixed left-3 top-3 bottom-3 z-50 rounded-3xl' : 'relative h-full'}
+            ${isMobile && !isMobileMenuOpen ? '-translate-x-[120%]' : 'translate-x-0'}
+            flex flex-col overflow-hidden
+          `}
+        >
+          <div className="p-4 flex items-center justify-between">
+            <div className={`flex items-center min-w-0 ${isCollapsed ? 'opacity-0 w-0' : 'opacity-100'}`}>
+              <div className="flex items-center justify-center w-10 h-10 rounded-2xl bg-primary text-primary-foreground">
+                <Store className="h-4 w-4" />
               </div>
+              <div className="ml-3 min-w-0">
+                <h1 className="font-display text-lg leading-none truncate text-foreground">
+                  {storeSettings.name}
+                </h1>
+                <p className="mt-1 text-[11px] tracking-[0.18em] uppercase text-muted-foreground">
+                  Workspace
+                </p>
+              </div>
+            </div>
+
+            {!isMobile && (
+              <button
+                onClick={() => setIsCollapsed(!isCollapsed)}
+                className="h-9 w-9 flex items-center justify-center rounded-xl hover:bg-accent text-muted-foreground"
+              >
+                {isCollapsed ? <PlusSquare className="h-4 w-4" /> : <MinusSquare className="h-4 w-4" />}
+              </button>
+            )}
+          </div>
+
+          {!isCollapsed && (
+            <div className="px-4 pb-4">
+              <div className="flex items-center gap-3 rounded-2xl bg-muted/70 p-3">
+                <Avatar className="h-9 w-9">
+                  <AvatarImage src={displayUser.avatar} />
+                  <AvatarFallback className="bg-primary text-primary-foreground text-xs">
+                    {initials}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="min-w-0">
+                  <p className="text-sm font-medium truncate">{displayUser.name}</p>
+                  <Badge variant="secondary" className="mt-1 text-[10px] px-2 py-0 font-normal">
+                    {displayUser.role}
+                  </Badge>
+                </div>
+              </div>
+              <input
+                type="text"
+                placeholder="Search…"
+                value={searchQuery}
+                onChange={e => setSearchQuery(e.target.value)}
+                className="mt-3 w-full h-10 px-3 bg-card border border-border rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-ring"
+              />
             </div>
           )}
 
-          {/* Menu */}
-          <nav className="flex-1 p-2 space-y-1 overflow-y-auto">
-            {filteredMenuItems.map(item => (
-              <div key={item.id}>
-                <Tooltip>
-                  <TooltipTrigger asChild>
-                    <button
-                      onClick={() => {
-                        item.isExpandable ? toggleMenu(item.id) : onTabChange(item.id);
-                      }}
-                      className={`w-full flex items-center justify-between p-3 rounded-xl group ${
-                        activeTab === item.id
-                          ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow transform scale-105'
-                          : 'text-gray-700 hover:bg-gradient-to-r hover:from-gray-100 hover:to-gray-200'
-                      }`}
-                    >
-                      <div className={`
-  flex items-center w-full
-  ${isCollapsed ? 'justify-center' : 'space-x-3'}
-`}>
-                        <div className={`p-2 rounded-lg ${activeTab === item.id ? 'bg-white/20' : item.bgColor}`}>
-                          <item.icon className={`h-5 w-5 ${activeTab === item.id ? 'text-white' : item.color}`} />
-                        </div>
-                        {!isCollapsed && (
-<div
-  className={`
-    overflow-hidden
-    whitespace-nowrap
-    transition-all
-    duration-300
-    ${isCollapsed
-      ? 'w-0 opacity-0'
-      : 'w-auto opacity-100'}
-  `}
->
-  {item.label}
-</div>
-                        )}
-                      </div>
-                      {item.isExpandable && !isCollapsed && (
-                        <ChevronDown className={`h-4 w-4 transform transition-transform ${expandedMenus[item.id] ? 'rotate-180' : ''}`} />
-                      )}
-                    </button>
-                  </TooltipTrigger>
-                  {isCollapsed && (
-                    <TooltipContent side="right">
-                      <p>{item.label}</p>
-                    </TooltipContent>
-                  )}
-                </Tooltip>
-                {/* Submenu */}
-                {item.isExpandable && expandedMenus[item.id] && !isCollapsed && (
-                  <div className="mt-2 ml-7 space-y-1">
-                    {item.submenu?.map(subItem => (
+          <nav className="flex-1 px-2 pb-2 space-y-0.5 overflow-y-auto">
+            {filteredMenuItems.map(item => {
+              const active = isItemActive(item);
+              return (
+                <div key={item.id}>
+                  <Tooltip>
+                    <TooltipTrigger asChild>
                       <button
-                        key={subItem.id}
-                        onClick={() => onTabChange(subItem.id)}
-                        className={`w-full flex items-center space-x-2 py-2 px-3 rounded-lg text-sm ${
-                          activeTab === subItem.id
-                            ? 'bg-blue-50 text-blue-600 border-l-2 border-blue-500'
-                            : 'text-gray-600 hover:bg-gray-50'
+                        onClick={() => {
+                          item.isExpandable ? toggleMenu(item.id) : handleTabChange(item.id);
+                        }}
+                        className={`w-full flex items-center justify-between px-3 py-2.5 rounded-2xl text-sm transition-colors ${
+                          active && !item.isExpandable
+                            ? 'bg-accent text-foreground'
+                            : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                         }`}
                       >
-                        {subItem.icon && <subItem.icon className={`h-4 w-4 ${subItem.color || 'text-gray-500'}`} />}
-                        <span>{subItem.label}</span>
+                        <div className={`flex items-center ${isCollapsed ? 'justify-center w-full' : 'gap-3'}`}>
+                          <item.icon className="h-4 w-4 shrink-0" />
+                          {!isCollapsed && <span className="font-medium">{item.label}</span>}
+                        </div>
+                        {item.isExpandable && !isCollapsed && (
+                          <ChevronDown className={`h-4 w-4 transition-transform ${expandedMenus[item.id] || active ? 'rotate-180' : ''}`} />
+                        )}
                       </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
+                    </TooltipTrigger>
+                    {isCollapsed && (
+                      <TooltipContent side="right">
+                        <p>{item.label}</p>
+                      </TooltipContent>
+                    )}
+                  </Tooltip>
+
+                  {item.isExpandable && (expandedMenus[item.id] || active) && !isCollapsed && (
+                    <div className="mt-1 ml-4 pl-3 border-l border-border space-y-0.5">
+                      {item.submenu?.map(subItem => (
+                        <button
+                          key={subItem.id}
+                          onClick={() => handleTabChange(subItem.id)}
+                          className={`w-full flex items-center gap-2 py-2 px-2 rounded-xl text-sm ${
+                            activeTab === subItem.id
+                              ? 'bg-accent text-foreground'
+                              : 'text-muted-foreground hover:text-foreground hover:bg-muted'
+                          }`}
+                        >
+                          {subItem.icon && <subItem.icon className="h-3.5 w-3.5" />}
+                          <span>{subItem.label}</span>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              );
+            })}
           </nav>
 
-          {/* Footer */}
-          <div className="p-4 border-t border-gray-200 bg-gradient-to-r from-gray-50 to-gray-100">
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={handleLogout}
-                  className={`w-full flex items-center justify-center ${!isCollapsed && 'justify-start'} space-x-3 p-3 rounded-lg text-red-600 hover:bg-red-50 hover:text-red-700`}
-                >
-                  <LogOut className="h-5 w-5" />
-                  {!isCollapsed && <span className="font-medium">Logout</span>}
-                </button>
-              </TooltipTrigger>
-              {isCollapsed && (
-                <TooltipContent side="right">
-                  <p>Logout</p>
-                </TooltipContent>
-              )}
-            </Tooltip>
+          <div className="p-3 border-t border-border/70">
+            <button
+              onClick={handleLogout}
+              className={`w-full flex items-center ${isCollapsed ? 'justify-center' : 'justify-start gap-3'} px-3 py-2.5 rounded-2xl text-sm text-destructive hover:bg-destructive/10`}
+            >
+              <LogOut className="h-4 w-4" />
+              {!isCollapsed && <span>Logout</span>}
+            </button>
             {!isCollapsed && (
-              <div className="mt-3 pt-3 border-t border-gray-200 text-xs text-gray-500 flex items-center justify-between">
-                <span>Version 1.0.0</span>
-                <span className="flex items-center space-x-1">
-                  <Activity className="h-3 w-3 text-green-500" /><span>Online</span>
+              <div className="mt-2 px-3 flex items-center justify-between text-[11px] text-muted-foreground">
+                <span>v1.0.0</span>
+                <span className="flex items-center gap-1">
+                  <Activity className="h-3 w-3 text-[hsl(var(--sage))]" />
+                  Online
                 </span>
               </div>
             )}
           </div>
-
-        </div>
+        </aside>
       </div>
     </TooltipProvider>
   );

@@ -8,6 +8,7 @@ import { custom } from "zod";
 import { Trash2, XCircle } from "lucide-react";
 import { useParams } from "react-router-dom";
 import { toast } from "@/components/ui/use-toast";
+import { Loading } from "@/components/ui/loading";
 
 export const QuotationDetails = ({
   id,
@@ -611,7 +612,7 @@ if (data.success) {
   }
 };
 
-  if (loading) return <div className="p-4">Loading...</div>;
+  if (loading) return <Loading message="Loading quotation" className="min-h-[400px]" />;
   if (!quotation) return <div className="p-4">No Data</div>;
 
 return (
@@ -758,7 +759,7 @@ return (
   Print
 </Button>
 
-<Button onClick={handleDownloadPDF} className="bg-blue-600 text-white">
+<Button onClick={handleDownloadPDF}>
   Download PDF
 </Button>
 
@@ -771,7 +772,7 @@ return (
     editingIndex !== null
   }
   onClick={approveQuotation}
-  className="bg-green-600 text-white disabled:opacity-50"
+  className="disabled:opacity-50"
 >
 {approving
   ? "Processing..."
@@ -785,7 +786,7 @@ return (
 
 
 <Button
-  className="bg-blue-600 hover:bg-blue-700"
+  className=""
   onClick={handleSharePDF}
 >
   Share PDF
@@ -821,7 +822,7 @@ return (
     </div>
 
     {/* CUSTOMER + TOTAL */}
-   <div className="grid grid-cols-2 gap-6 mb-6">
+   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mb-4 sm:mb-6">
 
   {/* CUSTOMER */}
   <div className="bg-white border rounded-xl shadow-sm">
@@ -913,7 +914,7 @@ return (
   {quotation.status !== "approved" && (
     <button
   onClick={() => setShowProductPicker(true)}
-      className="bg-blue-600 text-white px-3 py-1 rounded text-sm"
+      className="bg-primary text-primary-foreground px-3 py-1 rounded-lg text-sm"
     >
       + Add Item
     </button>

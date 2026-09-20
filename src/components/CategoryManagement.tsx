@@ -39,31 +39,31 @@ export const CategoryManagement = () => {
   };
 
   return (
-    <div className="p-6 bg-gradient-to-br from-green-50 to-blue-100 min-h-screen">
-      <div className="flex items-center justify-between mb-6">
+    <div className="p-6 bg-transparent min-h-full">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-800">{t('categories')}</h1>
-          <p className="text-gray-600">Organize and manage your product categories</p>
+          <h1 className="font-display text-3xl font-normal text-foreground">{t('categories')}</h1>
+          <p className="text-muted-foreground">Organize and manage your product categories</p>
         </div>
         <div className="flex gap-2">
           <Button
             variant="outline"
             onClick={() => setViewMode(viewMode === 'grid' ? 'table' : 'grid')}
           >
-            {viewMode === 'grid' ? <Eye className="h-4 w-4 mr-2" /> : <Grid className="h-4 w-4 mr-2" />}
-            {viewMode === 'grid' ? 'Table View' : 'Grid View'}
+            {viewMode === 'grid' ? <Eye className="h-4 w-4" /> : <Grid className="h-4 w-4" />}
+            <span className="hidden md:inline ml-2">{viewMode === 'grid' ? 'Table View' : 'Grid View'}</span>
           </Button>
-          <Button onClick={handleAdd} className="bg-green-600 hover:bg-green-700">
-            <Plus className="h-4 w-4 mr-2" />
-            {t('add')} {t('category')}
+          <Button onClick={handleAdd}>
+            <Plus className="h-4 w-4" />
+            <span className="hidden md:inline ml-2">{t('add')} {t('category')}</span>
           </Button>
         </div>
       </div>
 
       <Card className="mb-6 shadow-lg">
-        <CardContent className="p-6">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div className="relative md:col-span-2">
+        <CardContent className="p-4 sm:p-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
+            <div className="relative sm:col-span-2">
               <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
               <Input
                 placeholder={`${t('search')} ${t('categories')}`}
@@ -82,7 +82,7 @@ export const CategoryManagement = () => {
         </CardContent>
       </Card>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
         {filteredCategories.map((category) => (
           <Card key={category.id} className="hover:shadow-xl transition-shadow duration-300 border-l-4 border-l-green-500">
             <CardContent className="p-6">

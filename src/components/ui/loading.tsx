@@ -1,18 +1,37 @@
+import { cn } from '@/lib/utils';
+import { LumaSpin } from '@/components/ui/luma-spin';
 
-import { Loader2 } from 'lucide-react';
+interface SpinnerProps {
+  size?: 'sm' | 'md' | 'lg';
+  className?: string;
+}
+
+export const Spinner = ({ size = 'md', className = '' }: SpinnerProps) => {
+  return <LumaSpin size={size} className={className} />;
+};
 
 interface LoadingProps {
   message?: string;
   className?: string;
+  size?: 'sm' | 'md' | 'lg';
 }
 
-export const Loading = ({ message = 'Loading...', className = '' }: LoadingProps) => {
+export const Loading = ({
+  message = 'Loading',
+  className = '',
+  size = 'md',
+}: LoadingProps) => {
   return (
-    <div className={`flex items-center justify-center p-4 ${className}`}>
-      <div className="flex items-center space-x-2">
-        <Loader2 className="h-4 w-4 animate-spin" />
-        <span className="text-sm text-gray-600">{message}</span>
-      </div>
+    <div className={cn('flex flex-col items-center justify-center gap-4 p-8', className)}>
+      <Spinner size={size} />
+      {message && (
+        <div className="text-center space-y-1">
+          <p className="font-display text-2xl text-foreground">{message}</p>
+          <p className="text-[11px] uppercase tracking-[0.22em] text-muted-foreground">
+            Please wait
+          </p>
+        </div>
+      )}
     </div>
   );
 };

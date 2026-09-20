@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Search, Grid, List } from "lucide-react";
  import { Trash2, XCircle } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
+import { Loading } from "@/components/ui/loading";
 
 export const DeliveryChallanList = ({ onView }) => {
   const [data, setData] = useState([]);
@@ -135,11 +136,11 @@ if (end.getTime() < today.getTime()) {
 
   return "ongoing";
 };
-  if (loading) return <div className="p-4">Loading...</div>;
+  if (loading) return <Loading message="Loading challans" className="min-h-[320px]" />;
 
   return (
     <div className="p-8">
-      <h1 className="text-2xl font-semibold mb-6">
+      <h1 className="font-display text-2xl font-normal mb-6">
         Delivery Challans
       </h1>
 <div className="mb-4 flex items-center gap-4">
@@ -159,9 +160,9 @@ if (end.getTime() < today.getTime()) {
 
 <br />
 
-      <div className="bg-white rounded-xl border shadow-sm overflow-hidden">
+      <div className="bg-card rounded-2xl border overflow-hidden">
         <table className="w-full text-sm">
-          <thead className="bg-gray-50 text-gray-500">
+          <thead className="bg-muted/50 text-muted-foreground">
             <tr>
               <th className="px-6 py-3 text-left">#</th>
               <th className="px-6 py-3">Customer</th>

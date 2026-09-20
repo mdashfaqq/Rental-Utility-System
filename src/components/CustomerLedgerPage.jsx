@@ -3,6 +3,7 @@ import { API_BASE_URL } from "@/services/api";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/components/ui/use-toast";
 import { ArrowLeft } from "lucide-react";
+import { Loading } from "@/components/ui/loading";
 import {
   Select,
   SelectContent,
@@ -190,11 +191,7 @@ if (Number(amount) > Number(data.balance)) {
 
   // ⏳ LOADING
 if (loading) {
-  return (
-    <div className="p-6 text-center text-gray-500">
-      Loading ledger...
-    </div>
-  );
+  return <Loading message="Loading ledger" className="min-h-[400px]" />;
 }
 
 if (!customer) {
@@ -227,7 +224,7 @@ if (!data) {
       </div>
 
       {/* SUMMARY */}
-      <div className="grid grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-4">
         <div className="bg-white p-4 rounded-xl shadow">
           <p>Total</p>
           <p className="font-bold text-lg">₹{data.total}</p>
@@ -251,7 +248,7 @@ if (!data) {
         
         <h2 className="font-medium">Add Payment</h2>
 
-        <div className="flex gap-3">
+        <div className="flex flex-col sm:flex-row gap-3">
           <input
             type="number"
             value={amount}
@@ -265,7 +262,7 @@ if (!data) {
   value={paymentMethod}
   onValueChange={setPaymentMethod}
 >
-  <SelectTrigger className="w-[180px]">
+  <SelectTrigger className="w-full sm:w-[180px]">
     <SelectValue placeholder="Method" />
   </SelectTrigger>
 
@@ -282,6 +279,7 @@ if (!data) {
           <Button
             disabled={saving}
             onClick={handlePayment}
+            className="w-full sm:w-auto"
           >
             {saving ? "Processing..." : "Apply Payment"}
           </Button>
@@ -326,7 +324,7 @@ if (!data) {
       px-3
       py-2
       text-sm
-      w-[220px]
+      w-full sm:w-[220px]
       focus:outline-none
       focus:ring-2
       focus:ring-blue-500
@@ -334,7 +332,9 @@ if (!data) {
   />
 
 </div>
-<div className="max-h-[650px] overflow-y-auto border-t">
+
+{/* Desktop Table View */}
+<div className="hidden md:block max-h-[650px] overflow-y-auto border-t">
         <table className="w-full text-sm">
          <thead className="bg-gray-50 sticky top-0 z-10">
 <tr>
@@ -427,6 +427,69 @@ setSelectedInvoices((prev) =>
           </tbody>
         </table>
         </div>
+
+{/* Mobile Card View */}
+<div className="md:hidden space-y-3 p-3">
+  {data.invoices
+    .filter((i) =>
+      i.id
+        .toString()
+        .includes(invoiceSearch)
+    )
+    .map((i) => {
+      const balance = i.total_amount - i.paid_amount;
+
+      return (
+        <div
+          key={i.id}
+          onClick={() => {
+            setSelectedInvoiceId(i.id);
+            onTabChange("invoice-details");
+          }}
+          className="bg-gray-50 rounded-lg p-3 border border-gray-200 cursor-pointer hover:bg-gray-100 transition-colors"
+        >
+          <div className="flex justify-between items-start mb-2">
+            <div className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                checked={selectedInvoices.includes(i.id)}
+                onClick={(e) => e.stopPropagation()}
+                disabled={balance <= 0}
+                onChange={(e) => {
+                  if (e.target.checked) {
+                    setSelectedInvoices((prev) =>
+                      [...new Set([...prev, i.id])]
+                    );
+                  } else {
+                    setSelectedInvoices(
+                      selectedInvoices.filter((id) => id !== i.id)
+                    );
+                  }
+                }}
+              />
+              <span className="font-medium text-sm">#{i.id}</span>
+            </div>
+            <span
+              className={`px-2 py-1 rounded text-xs ${
+                i.status === "paid"
+                  ? "bg-green-100 text-green-700"
+                  : i.status === "partial"
+                  ? "bg-yellow-100 text-yellow-700"
+                  : "bg-red-100 text-red-700"
+              }`}
+            >
+              {i.status}
+            </span>
+          </div>
+          <div className="grid grid-cols-2 gap-2 text-xs mb-2">
+            <div><span className="text-gray-500">Total:</span> ₹{i.total_amount}</div>
+            <div><span className="text-gray-500">Paid:</span> ₹{i.paid_amount}</div>
+            <div className="col-span-2"><span className="text-gray-500">Balance:</span> <span className="text-red-600 font-medium">₹{balance.toFixed(2)}</span></div>
+          </div>
+        </div>
+      );
+    })}
+</div>
       </div>
 
       {/* PAYMENT HISTORY */}
@@ -434,56 +497,83 @@ setSelectedInvoices((prev) =>
         <div className="p-4 font-medium border-b">
           Payment History
         </div>
-<div className="max-h-[650px] overflow-y-auto border-t">
-        <table className="w-full text-sm">
-         <thead className="bg-gray-50 sticky top-0 z-10">
-            <tr>
-              <th  className="p-3 text-center">Date</th>
-              <th className="p-3 text-center">Amount</th>
-              <th className="p-3 text-center">Method</th>
-            </tr>
-          </thead>
-
-          <tbody>
+        
+        {/* Desktop Table View */}
+        <div className="hidden md:block max-h-[650px] overflow-y-auto border-t">
+          <table className="w-full text-sm">
+            <thead className="bg-gray-50 sticky top-0 z-10">
+              <tr>
+                <th className="p-3 text-center">Date</th>
+                <th className="p-3 text-center">Amount</th>
+                <th className="p-3 text-center">Method</th>
+              </tr>
+            </thead>
+            <tbody>
               {payments.length > 0 ? (
-    payments.map((p) => (
-      <tr key={p.id} className="border-t">
-        <td className="p-3 text-center">
-{new Date(p.created_at.replace(' ', 'T')).toLocaleString('en-IN', {
-  day: '2-digit',
-  month: '2-digit',
-  year: 'numeric',
-  hour: '2-digit',
-  minute: '2-digit',
-  second: '2-digit',
-  hour12: true,
-})}
-        </td>
+                payments.map((p) => (
+                  <tr key={p.id} className="border-t">
+                    <td className="p-3 text-center">
+                      {new Date(p.created_at.replace(' ', 'T')).toLocaleString('en-IN', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit',
+                        hour12: true,
+                      })}
+                    </td>
+                    <td className="font-medium text-center">
+                      ₹{p.amount}
+                    </td>
+                    <td className="p-3 text-center">
+                      {p.payment_method}
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={3} className="p-6 text-center text-gray-500">
+                    No payment history found
+                  </td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
 
-        <td className="font-medium text-center">
-          ₹{p.amount}
-        </td>
-
-        <td className="p-3 text-center">
-          {p.payment_method}
-        </td>
-      </tr>
-    ))
-  ) : (
-    <tr>
-      <td
-        colSpan={3}
-        className="p-6 text-center text-gray-500"
-      >
-        No payment history found
-      </td>
-    </tr>
-  )}
-
-          </tbody>
-        </table>
+        {/* Mobile Card View */}
+        <div className="md:hidden space-y-3 p-3">
+          {payments.length > 0 ? (
+            payments.map((p) => (
+              <div key={p.id} className="bg-gray-50 rounded-lg p-3 border border-gray-200">
+                <div className="flex justify-between items-start mb-2">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs text-gray-500">
+                      {new Date(p.created_at.replace(' ', 'T')).toLocaleString('en-IN', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        hour12: true,
+                      })}
+                    </p>
+                  </div>
+                  <span className="font-semibold text-green-600 text-sm">₹{p.amount}</span>
+                </div>
+                <div className="text-xs">
+                  <span className="text-gray-500">Method:</span> {p.payment_method}
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="text-center py-6 text-gray-500">
+              No payment history found
+            </div>
+          )}
+        </div>
       </div>
-</div>
     </div>
   );
 };

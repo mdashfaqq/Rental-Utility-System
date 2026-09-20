@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Search, Grid, List, Plus  } from "lucide-react";
 import { Trash2, XCircle } from "lucide-react";
 import { toast } from "@/components/ui/use-toast";
+import { Loading } from "@/components/ui/loading";
 
 export const QuotationList = ({ onView }) => {
   const [quotations, setQuotations] = useState([]);
@@ -124,7 +125,7 @@ const handleView = (id) => {
     setFiltered(result);
   }, [search, quotations]);
 
-  if (loading) return <div className="p-4">Loading...</div>;
+  if (loading) return <Loading message="Loading quotations" className="min-h-[320px]" />;
 
   return (
     <div className="p-4 space-y-4">
@@ -132,7 +133,7 @@ const handleView = (id) => {
       {/* HEADER */}
       <div className="flex justify-between items-center">
 
-        <h2 className="text-lg font-semibold">Quotations</h2>
+        <h2 className="font-display text-2xl font-normal">Quotations</h2>
 
   
       </div>
@@ -175,10 +176,10 @@ const handleView = (id) => {
 
       {/* TABLE VIEW */}
       {view === "table" && (
-       <div className="bg-white dark:bg-gray-900 rounded-xl border dark:border-gray-700 shadow-sm overflow-hidden">
+       <div className="bg-card rounded-2xl border overflow-hidden">
          <table className="w-full text-sm table-fixed">
 
-            <thead className="bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300">
+            <thead className="bg-muted/50 text-muted-foreground">
               <tr>
 <th className="p-3 text-left w-[60px]">#</th>
 <th className="p-3 text-left w-[220px]">Customer</th>

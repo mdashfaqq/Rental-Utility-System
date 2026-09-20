@@ -8,7 +8,7 @@ import { CartItem, useData } from '@/contexts/DataContext';
 import { ProductViewSwitcher } from '@/components/ProductViewSwitcher';
 import {
   Search, Scan, Plus, Minus, Trash2, CreditCard, Banknote, Printer, Package,
-  RefreshCw, ShoppingCart, QrCode, CheckCircle2, Clock, LogOut,
+  RefreshCw, ShoppingCart, QrCode, CheckCircle2, Clock, LogOut, X,
 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import 'react-toastify/dist/ReactToastify.css';
@@ -35,6 +35,7 @@ const [lastCreated, setLastCreated] = useState(null);
 const [loadingType, setLoadingType] = useState(null);
 const [setCart] = useState([]);
 const [showSuccess, setShowSuccess] = useState(false);
+const [cartSheetOpen, setCartSheetOpen] = useState(false);
 const { user } = useAuth();
 const capitalize = (text: string) =>
   text.charAt(0).toUpperCase() + text.slice(1);
@@ -1265,96 +1266,83 @@ else {
 
   // --- JSX ---
   return (
-    <div className="h-screen overflow-hidden bg-gray-50">
-      <div className="h-full flex flex-col">
-        {/* Header */}
-<div className="bg-gradient-to-r from-blue-600 to-purple-600 p-4 text-white flex-shrink-0">
-  <div className="flex items-center justify-between">
+    <div className="h-full w-full min-w-0 overflow-hidden bg-transparent flex flex-col">
+      {/* Header */}
+<div className="bg-card/90 backdrop-blur border-b border-border p-3 sm:p-4 flex-shrink-0">
+  <div className="flex items-center justify-between gap-2 sm:gap-4">
     
     {/* LEFT SIDE */}
-    <div>
-      <h1 className="text-2xl font-bold tracking-tight">
+    <div className="flex-1 min-w-0">
+      <h1 className="font-display text-2xl sm:text-3xl tracking-tight truncate">
         Point of Sale
       </h1>
 
-      <p className="text-sm text-blue-100 flex items-center gap-4 mt-2">
+      <p className="text-xs sm:text-sm text-muted-foreground flex items-center gap-2 sm:gap-4 mt-1 sm:mt-2">
         
         {/* TIME */}
         <span className="flex items-center gap-1">
-          <Clock className="h-4 w-4" />
+          <Clock className="h-3 w-3 sm:h-4 sm:w-4" />
           {currentTime.toLocaleTimeString()}
         </span>
-
-        {/* USER */}
-        {/* <div className="flex items-center gap-2">
-          <Badge className="bg-white/20 text-white hover:bg-white/20 border-0">
-            {capitalize(displayUser.role)}
-          </Badge>
-
-          <span className="font-medium text-white">
-            {displayUser.name}
-          </span>
-        </div> */}
       </p>
     </div>
 
     {/* RIGHT SIDE */}
-    <div className="flex items-center gap-6 text-sm">
+    <div className="flex items-center gap-2 sm:gap-6 text-xs sm:text-sm">
       
       {/* ITEMS */}
-      <div className="text-center">
-        <div className="text-2xl font-bold">
+      <div className="text-center hidden sm:block">
+        <div className="text-xl sm:text-2xl font-semibold">
           {totalItemsCount}
         </div>
-        <div className="text-xs text-blue-200 uppercase tracking-wide">
+        <div className="text-[10px] text-muted-foreground uppercase tracking-wide">
           Items
         </div>
       </div>
 
       {/* TOTAL */}
       <div className="text-center">
-        <div className="text-2xl font-bold">
+        <div className="text-lg sm:text-2xl font-semibold">
           ₹{total.toLocaleString()}
         </div>
-        <div className="text-xs text-blue-200 uppercase tracking-wide">
+        <div className="text-[10px] text-muted-foreground uppercase tracking-wide">
           Total
         </div>
       </div>
 
       {/* LOGOUT */}
       <Button
-        variant="secondary"
-        className="bg-white/10 border border-white/20 text-white hover:bg-white/20"
+        variant="outline"
+        size="sm"
+        className="px-2 sm:px-4"
         onClick={handleLogout}
       >
-        <LogOut className="h-4 w-4 mr-2" />
-        Logout
+        <LogOut className="h-3 w-3 sm:h-4 sm:w-4 mr-0 sm:mr-2" />
+        <span className="hidden sm:inline">Logout</span>
       </Button>
     </div>
   </div>
 </div>
 
         {/* Main Content */}
-        <div className="flex-1 min-h-0">
-          
-          <div className="flex h-full min-h-0">
+        <div className="flex-1 min-h-0 min-w-0 w-full flex flex-col lg:grid lg:grid-cols-[minmax(0,1fr)_24rem]">
             {/* PRODUCTS PANEL */}
             
-<div className="flex-1 flex flex-col p-4 overflow-hidden min-h-0">
+<div className="flex-1 flex flex-col p-3 sm:p-4 overflow-hidden min-h-0 min-w-0">
                 {/* Search/filter/add-controls */}
-              <div className="bg-white p-4 rounded-lg shadow-sm mb-4 flex-shrink-0">
-                <div className="flex gap-3 mb-4">
+              <div className="bg-card p-3 sm:p-4 rounded-2xl border border-black/[0.04] mb-3 sm:mb-4 flex-shrink-0">
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 mb-3 sm:mb-4">
                   <div className="relative flex-1">
-                    <Search className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+                    <Search className="absolute left-3 top-3 h-4 w-4 sm:h-5 sm:w-5 text-gray-400" />
                     <Input
                       placeholder="Search products..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-10 h-11"
+                      className="pl-10 h-10 sm:h-11"
                     />
                   </div>
                   <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                    <SelectTrigger className="w-48 h-11">
+                    <SelectTrigger className="w-full sm:w-48 h-10 sm:h-11">
                       <SelectValue placeholder="All Categories" />
                     </SelectTrigger>
                     <SelectContent>
@@ -1368,24 +1356,28 @@ else {
                   </Select>
                 </div>
 
-                <div className="flex gap-3">
+                <div className="flex flex-wrap gap-2 sm:gap-3">
                   <Button
                     variant={isScanning ? "destructive" : "default"}
+                    size="sm"
                     onClick={() => {
                       setIsScanning(!isScanning);
                       if (!isScanning) setTimeout(() => barcodeRef.current?.focus(), 100);
                     }}
                   >
-                    <Scan className="h-4 w-4 mr-2" />
-                    {isScanning ? 'Cancel Scan' : 'Scan Barcode'}
+                    <Scan className="h-4 w-4 mr-1 sm:mr-2" />
+                    <span className="hidden sm:inline">{isScanning ? 'Cancel Scan' : 'Scan Barcode'}</span>
+                    <span className="sm:hidden">{isScanning ? 'Cancel' : 'Scan'}</span>
                   </Button>
                   <Button
                     variant="outline"
+                    size="sm"
                     onClick={() => clearCart()}
                     disabled={cart.length === 0}
                   >
-                    <RefreshCw className="h-4 w-4 mr-2" />
-                    Clear All
+                    <RefreshCw className="h-4 w-4 mr-1 sm:mr-2" />
+                    <span className="hidden sm:inline">Clear All</span>
+                    <span className="sm:hidden">Clear</span>
                   </Button>
                   {/* <Button
                     variant="outline"
@@ -1399,10 +1391,10 @@ else {
                 </div>
 
                 {isScanning && (
-                  <div className="mt-4 p-4 bg-blue-50 rounded border">
+                  <div className="mt-4 p-4 bg-accent rounded-xl border border-transparent">
                     <div className="text-center mb-3">
-                      <QrCode className="h-8 w-8 text-blue-600 mx-auto mb-2" />
-                      <p className="text-blue-700">Ready to scan barcode</p>
+                      <QrCode className="h-8 w-8 text-foreground mx-auto mb-2" />
+                      <p className="text-foreground">Ready to scan barcode</p>
                     </div>
                     <div className="flex gap-2">
                       <Input
@@ -1423,7 +1415,7 @@ else {
 
               {/* Inline custom product-to-cart row */}
               {showCustomProduct && (
-                <div className="mb-4 p-4 border bg-gray-100 rounded-lg flex flex-col md:flex-row md:items-end gap-2">
+                <div className="mb-4 p-4 border bg-muted rounded-2xl flex flex-col md:flex-row md:items-end gap-2">
                   <Input
                     placeholder="Name*"
                     value={customProduct.name}
@@ -1471,7 +1463,7 @@ else {
               )}
 
               {/* Products Display */}
-<div className="flex-1 bg-white rounded-lg shadow-sm overflow-hidden relative flex flex-col">
+<div className="flex-1 bg-card rounded-2xl border border-black/[0.04] overflow-hidden relative flex flex-col">
                 <div className="p-3 border-b flex items-center">
                   <Package className="h-5 w-5 mr-2" />
                   <span className="font-semibold">Products ({filteredProducts.length})</span>
@@ -1505,16 +1497,37 @@ else {
 
 
 
+            {cartSheetOpen && (
+              <button
+                className="lg:hidden fixed inset-0 z-30 bg-ink/25 backdrop-blur-[2px]"
+                onClick={() => setCartSheetOpen(false)}
+              />
+            )}
+
             {/* Cart and Payment Panel (Right) */}
-            <div className="w-[420px] border-l bg-white flex flex-col overflow-hidden min-h-0">
+            <div className={`
+              bg-card flex flex-col overflow-hidden min-h-0 min-w-0
+              lg:relative lg:w-full lg:border-l lg:h-auto lg:translate-y-0 lg:flex
+              ${cartSheetOpen
+                ? 'fixed inset-x-0 bottom-0 z-40 h-[78vh] rounded-t-[28px] shadow-soft border-t flex'
+                : 'hidden lg:flex'}
+            `}>
               {/* Header (sticky) */}
-              <div className="p-3 border-b flex-shrink-0 sticky top-0 bg-white z-10">
+              <div className="p-3 border-b flex-shrink-0 sticky top-0 bg-card z-10">
                 <div className="flex items-center justify-between">
                   <span className="flex items-center font-semibold text-base">
                     <ShoppingCart className="h-5 w-5 mr-2" />
                     Cart ({cart.length})
                   </span>
-
+                  <div className="flex items-center gap-1">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="lg:hidden"
+                    onClick={() => setCartSheetOpen(false)}
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
                   <Button
                     variant="ghost"
                     size="sm"
@@ -1523,6 +1536,7 @@ else {
                   >
                     <Trash2 className="h-4 w-4" />
                   </Button>
+                  </div>
                 </div>
               </div>
 
@@ -1532,7 +1546,7 @@ else {
     {cart.map((item) => (
       <div
         key={item.id}
-className="p-3 bg-white rounded-lg border border-l-4 border-blue-500"
+className="p-3 bg-muted/40 rounded-xl border-l-2 border-primary"
       >
         <div className="flex items-center justify-between">
           <div className="flex-1 min-w-0">
@@ -1590,7 +1604,7 @@ className="p-3 bg-white rounded-lg border border-l-4 border-blue-500"
 
         {/* ✅ RENTAL UI (INSIDE ITEM) */}
     
-          <div className="mt-3 space-y-2 bg-blue-50 p-2 rounded">
+          <div className="mt-3 space-y-2 bg-accent/70 p-2 rounded-xl">
 
             {/* Start Date */}
 {/* Start Date */}
@@ -1649,7 +1663,7 @@ className="p-3 bg-white rounded-lg border border-l-4 border-blue-500"
               {/* Compact checkout section */}
               {orderMode === 'challan' && (
   <div className="border-t p-3">
-    <div className="bg-blue-50 p-3 rounded text-xs text-blue-700">
+    <div className="bg-accent p-3 rounded-xl text-xs text-foreground">
       💡 Pricing will be calculated during final invoice
     </div>
   </div>
@@ -1886,27 +1900,24 @@ className="p-3 bg-white rounded-lg border border-l-4 border-blue-500"
 
   </div>
 )}
-
-</div>
-{/* <Button
-  variant="outline"
-  className="w-full h-9"
-  onClick={handlePrintReceipt}
->
-  <Printer className="h-4 w-4 mr-2" />
-  {orderMode === 'quotation'
-    ? 'Print Quotation'
-    : orderMode === 'challan'
-    ? 'Print Challan'
-    : 'Print Invoice'}
-</Button> */}
                 </div>
               </div>
             </div>
 
             {/* End cart/pay panel */}
-          </div>
         </div>
+
+        <button
+          type="button"
+          onClick={() => setCartSheetOpen(true)}
+          className={`lg:hidden mx-3 mb-2 rounded-full bg-primary text-primary-foreground px-5 py-3 flex items-center justify-between shadow-soft ${cartSheetOpen ? 'invisible' : ''}`}
+        >
+          <span className="flex items-center gap-2 font-medium">
+            <ShoppingCart className="h-4 w-4" />
+            Cart · {cart.length} items
+          </span>
+          <span className="font-semibold">₹{total.toLocaleString()}</span>
+        </button>
       </div>
     </div>
   );

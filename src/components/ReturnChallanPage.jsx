@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { API_BASE_URL } from "@/services/api";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/use-toast";
+import { Loading } from "@/components/ui/loading";
 
 export const ReturnChallanPage = ({
   id,
@@ -235,7 +236,7 @@ setTimeout(() => {
   }
 };
 
-  if (loading) return <div className="p-6">Loading...</div>;
+  if (loading) return <Loading message="Loading return" className="min-h-[400px]" />;
 
   if (!items.length) {
     return (

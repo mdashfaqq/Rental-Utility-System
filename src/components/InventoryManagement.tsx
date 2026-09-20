@@ -14,9 +14,9 @@ import { settingsApi } from '@/services/api';
 import { toast } from './ui/sonner';
 import { useToast } from './ui/use-toast';
 export const InventoryManagement = ({
-  inventoryFilter
+  inventoryFilter = ""
 }: {
-  inventoryFilter: string;
+  inventoryFilter?: string;
 }) => {
   const { t } = useLanguage();
 const {
@@ -191,84 +191,153 @@ const getStockStatus = (stock: number) => {
 
   const renderTableView = () => (
     <div className="bg-white rounded-lg shadow overflow-hidden">
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Product</TableHead>
-            <TableHead>Barcode</TableHead>
-            <TableHead>Category</TableHead>
-            <TableHead>Vendor</TableHead>
-            <TableHead>Rental Price</TableHead>
-            <TableHead>Unit Price</TableHead>
-            <TableHead>Stock</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead>Actions</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {filteredProducts.map((product) => {
-            const stockStatus = getStockStatus(product.stock);
-            return (
-              <TableRow key={product.id}>
-                <TableCell className="font-medium">{product.name}</TableCell>
-                <TableCell>{product.barcode}</TableCell>
-                <TableCell>{product.category}</TableCell>
-                <TableCell>{product.vendor}</TableCell>
-                <TableCell>₹{product.price}</TableCell>
-                <TableCell>₹{product.unitPrice}</TableCell>
-                <TableCell>{product.stock}</TableCell>
-                <TableCell>
-                  <span className={`px-2 py-1 rounded-full text-xs font-medium ${stockStatus.color}`}>
-                    {stockStatus.text}
-                  </span>
-                </TableCell>
-                <TableCell>
-                  <div className="flex space-x-1">
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleEdit(product)}
-                      className="h-8 w-8 p-0"
-                    >
-                      <Edit className="h-3 w-3" />
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleStockIn(product)}
-                      className="h-8 w-8 p-0 text-green-600 hover:text-green-700"
-                    >
-                      <ArrowUp className="h-3 w-3" />
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleStockOut(product)}
-                      className="h-8 w-8 p-0 text-red-600 hover:text-red-700"
-                    >
-                      <ArrowDown className="h-3 w-3" />
-                    </Button>
+      {/* Desktop Table View */}
+      <div className="hidden md:block overflow-x-auto">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Product</TableHead>
+              <TableHead>Barcode</TableHead>
+              <TableHead>Category</TableHead>
+              <TableHead>Vendor</TableHead>
+              <TableHead>Rental Price</TableHead>
+              <TableHead>Unit Price</TableHead>
+              <TableHead>Stock</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead>Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {filteredProducts.map((product) => {
+              const stockStatus = getStockStatus(product.stock);
+              return (
+                <TableRow key={product.id}>
+                  <TableCell className="font-medium">{product.name}</TableCell>
+                  <TableCell>{product.barcode}</TableCell>
+                  <TableCell>{product.category}</TableCell>
+                  <TableCell>{product.vendor}</TableCell>
+                  <TableCell>₹{product.price}</TableCell>
+                  <TableCell>₹{product.unitPrice}</TableCell>
+                  <TableCell>{product.stock}</TableCell>
+                  <TableCell>
+                    <span className={`px-2 py-1 rounded-full text-xs font-medium ${stockStatus.color}`}>
+                      {stockStatus.text}
+                    </span>
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex space-x-1">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleEdit(product)}
+                        className="h-8 w-8 p-0"
+                      >
+                        <Edit className="h-3 w-3" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleStockIn(product)}
+                        className="h-8 w-8 p-0 text-green-600 hover:text-green-700"
+                      >
+                        <ArrowUp className="h-3 w-3" />
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleStockOut(product)}
+                        className="h-8 w-8 p-0 text-red-600 hover:text-red-700"
+                      >
+                        <ArrowDown className="h-3 w-3" />
+                      </Button>
 
-                    <Button 
-                      variant="outline" 
-                      size="sm" 
-                      className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                      onClick={() => handleDelete(Number(product.id))}
-                    >
-                      <Trash2 className="h-3 w-3" />
-                    </Button> 
-                  </div>
-                </TableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
+                      <Button 
+                        variant="outline" 
+                        size="sm" 
+                        className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                        onClick={() => handleDelete(Number(product.id))}
+                      >
+                        <Trash2 className="h-3 w-3" />
+                      </Button> 
+                    </div>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </div>
+
+      {/* Mobile Card View */}
+      <div className="md:hidden space-y-3 p-3">
+        {filteredProducts.map((product) => {
+          const stockStatus = getStockStatus(product.stock);
+          return (
+            <div key={product.id} className="bg-gray-50 rounded-lg p-3 border border-gray-200">
+              <div className="flex justify-between items-start mb-2">
+                <div className="flex-1 min-w-0">
+                  <p className="font-medium text-sm truncate">{product.name}</p>
+                  <p className="text-xs text-gray-500">{product.barcode}</p>
+                </div>
+                <span className={`px-2 py-1 rounded-full text-xs font-medium ml-2 flex-shrink-0 ${stockStatus.color}`}>
+                  {stockStatus.text}
+                </span>
+              </div>
+              
+              <div className="grid grid-cols-2 gap-2 mb-2 text-xs">
+                <div><span className="text-gray-500">Category:</span> {product.category}</div>
+                <div><span className="text-gray-500">Vendor:</span> {product.vendor}</div>
+                <div><span className="text-gray-500">Rental:</span> ₹{product.price}</div>
+                <div><span className="text-gray-500">Unit:</span> ₹{product.unitPrice}</div>
+                <div className="col-span-2"><span className="text-gray-500">Stock:</span> {product.stock}</div>
+              </div>
+              
+              <div className="flex gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleEdit(product)}
+                  className="flex-1"
+                >
+                  <Edit className="h-3 w-3" />
+                  <span className="hidden md:inline ml-1">Edit</span>
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleStockIn(product)}
+                  className="flex-1 text-green-600 hover:text-green-700"
+                >
+                  <ArrowUp className="h-3 w-3" />
+                  <span className="hidden md:inline ml-1">In</span>
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handleStockOut(product)}
+                  className="flex-1 text-red-600 hover:text-red-700"
+                >
+                  <ArrowDown className="h-3 w-3" />
+                  <span className="hidden md:inline ml-1">Out</span>
+                </Button>
+                <Button 
+                  variant="outline" 
+                  size="sm" 
+                  className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                  onClick={() => handleDelete(Number(product.id))}
+                >
+                  <Trash2 className="h-3 w-3" />
+                </Button> 
+              </div>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 
   const renderGridView = () => (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
       {filteredProducts.map((product) => {
         const stockStatus = getStockStatus(product.stock);
         return (
@@ -300,8 +369,8 @@ const getStockStatus = (stock: number) => {
                   className="flex-1"
                   onClick={() => handleEdit(product)}
                 >
-                  <Edit className="h-3 w-3 mr-1" />
-                  {t('edit')}
+                  <Edit className="h-3 w-3" />
+                  <span className="hidden md:inline ml-1">{t('edit')}</span>
                 </Button>
                 <Button
                   variant="outline"
@@ -331,13 +400,13 @@ const getStockStatus = (stock: number) => {
   );
 
   return (
-    <div className="p-6 bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-3xl font-bold text-gray-800">{t('inventory')}</h1>
+    <div className="p-6 bg-transparent min-h-full">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+        <h1 className="font-display text-3xl font-normal text-foreground">{t('inventory')}</h1>
         <div className="flex gap-2">
-          <Button onClick={handleAdd} className="bg-blue-600 hover:bg-blue-700">
-            <Plus className="h-4 w-2 mr-2" />
-            {t('Add Stock')}
+          <Button onClick={handleAdd}>
+            <Plus className="h-4 w-2" />
+            <span className="hidden md:inline ml-2">{t('Add Stock')}</span>
           </Button>
           <div className="flex bg-white rounded-lg p-1">
             <Button
@@ -359,8 +428,8 @@ const getStockStatus = (stock: number) => {
       </div>
 
       <Card className="mb-6">
-        <CardContent className="p-6">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <CardContent className="p-4 sm:p-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
             <div className="relative">
               <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
               <Input

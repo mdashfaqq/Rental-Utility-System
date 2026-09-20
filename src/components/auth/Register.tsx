@@ -178,13 +178,13 @@ export const Register = ({ onRegister, onSwitchToLogin }: RegisterProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-background flex items-center justify-center p-6">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold text-gray-800">
-            Create an Account
+          <CardTitle className="font-display text-4xl font-normal text-foreground">
+            Create an account
           </CardTitle>
-          <p className="text-gray-600">Get started with your new Grocery POS account</p>
+          <p className="text-muted-foreground">Start managing rentals in a quieter workspace</p>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">

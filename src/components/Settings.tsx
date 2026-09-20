@@ -950,9 +950,9 @@ export const Settings = () => {
   };
 
   return (
-    <div className="p-6 space-y-6 bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <div className="p-6 space-y-6 bg-transparent min-h-full">
       <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold text-gray-900 flex items-center">
+        <h1 className="font-display text-3xl font-normal text-foreground flex items-center">
           <SettingsIcon className="h-8 w-8 mr-3" />
           {t('settings')}
         </h1>
@@ -970,30 +970,35 @@ export const Settings = () => {
       </div>
 
       <Tabs defaultValue="store" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-6">
-          <TabsTrigger value="store" className="flex items-center gap-2">
+        <TabsList className="grid w-full grid-cols-6 md:grid-cols-6 overflow-x-auto">
+          <TabsTrigger value="store" className="flex items-center gap-2 whitespace-nowrap">
             <Building2 className="h-4 w-4" />
-            {t('storeDetails')}
+            <span className="hidden md:inline">{t('storeDetails')}</span>
+            <span className="md:hidden">Store</span>
           </TabsTrigger>
-          <TabsTrigger value="users" className="flex items-center gap-2">
+          <TabsTrigger value="users" className="flex items-center gap-2 whitespace-nowrap">
             <Users className="h-4 w-4" />
             Users
           </TabsTrigger>
-          <TabsTrigger value="tax" className="flex items-center gap-2">
+          <TabsTrigger value="tax" className="flex items-center gap-2 whitespace-nowrap">
             <Receipt className="h-4 w-4" />
-            {t('Billing Settings ')}
+            <span className="hidden md:inline">{t('Billing Settings ')}</span>
+            <span className="md:hidden">Billing</span>
           </TabsTrigger>
-          <TabsTrigger value="print" className="flex items-center gap-2">
+          <TabsTrigger value="print" className="flex items-center gap-2 whitespace-nowrap">
             <Printer className="h-4 w-4" />
-            {t('printSettings')}
+            <span className="hidden md:inline">{t('printSettings')}</span>
+            <span className="md:hidden">Print</span>
           </TabsTrigger>
-          <TabsTrigger value="system" className="flex items-center gap-2">
+          <TabsTrigger value="system" className="flex items-center gap-2 whitespace-nowrap">
             <Database className="h-4 w-4" />
-            {t('systemSettings')}
+            <span className="hidden md:inline">{t('systemSettings')}</span>
+            <span className="md:hidden">System</span>
           </TabsTrigger>
-          <TabsTrigger value="security" className="flex items-center gap-2">
+          <TabsTrigger value="security" className="flex items-center gap-2 whitespace-nowrap">
             <Shield className="h-4 w-4" />
-            {t('securitySettings')}
+            <span className="hidden md:inline">{t('securitySettings')}</span>
+            <span className="md:hidden">Security</span>
           </TabsTrigger>
         </TabsList>
 
@@ -1091,28 +1096,82 @@ export const Settings = () => {
                   setSelectedUser(null);
                   setUserModalOpen(true);
                 }}>
-                  <Plus className="h-4 w-4 mr-2" />
-                  Add New User
+                  <Plus className="h-4 w-4" />
+                  <span className="hidden md:inline ml-2">Add New User</span>
                 </Button>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Email</TableHead>
-                    <TableHead>Role</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {users.map((user) => (
-                    <TableRow key={user.id}>
-                      <TableCell className="font-medium">{user.name}</TableCell>
-                      <TableCell>{user.email}</TableCell>
-                      <TableCell>
+              {/* Desktop Table View */}
+              <div className="hidden md:block overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Name</TableHead>
+                      <TableHead>Email</TableHead>
+                      <TableHead>Role</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Actions</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {users.map((user) => (
+                      <TableRow key={user.id}>
+                        <TableCell className="font-medium">{user.name}</TableCell>
+                        <TableCell>{user.email}</TableCell>
+                        <TableCell>
+                          <span className={`px-2 py-1 rounded-full text-xs ${
+                            user.role === 'admin' ? 'bg-red-100 text-red-800' :
+                            user.role === 'manager' ? 'bg-blue-100 text-blue-800' :
+                            'bg-green-100 text-green-800'
+                          }`}>
+                            {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
+                          </span>
+                        </TableCell>
+                        <TableCell>
+                          <span className={`px-2 py-1 rounded-full text-xs ${
+                            user.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                          }`}>
+                            {user.status.charAt(0).toUpperCase() + user.status.slice(1)}
+                          </span>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex gap-2">
+                            <Button 
+                              variant="outline" 
+                              size="sm"
+                              onClick={() => {
+                                setSelectedUser(user);
+                                setUserModalOpen(true);
+                              }}
+                            >
+                              <Edit className="h-4 w-4" />
+                            </Button>
+                            <Button 
+                              variant="destructive" 
+                              size="sm"
+                              onClick={() => handleDeleteUser(user.id)}
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
+
+              {/* Mobile Card View */}
+              <div className="md:hidden space-y-3 p-3">
+                {users.map((user) => (
+                  <div key={user.id} className="bg-gray-50 rounded-lg p-3 border border-gray-200">
+                    <div className="flex justify-between items-start mb-2">
+                      <div className="flex-1 min-w-0">
+                        <p className="font-medium text-sm truncate">{user.name}</p>
+                        <p className="text-xs text-gray-500">{user.email}</p>
+                      </div>
+                      <div className="flex gap-1 ml-2 flex-shrink-0">
                         <span className={`px-2 py-1 rounded-full text-xs ${
                           user.role === 'admin' ? 'bg-red-100 text-red-800' :
                           user.role === 'manager' ? 'bg-blue-100 text-blue-800' :
@@ -1120,39 +1179,38 @@ export const Settings = () => {
                         }`}>
                           {user.role.charAt(0).toUpperCase() + user.role.slice(1)}
                         </span>
-                      </TableCell>
-                      <TableCell>
                         <span className={`px-2 py-1 rounded-full text-xs ${
                           user.status === 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
                         }`}>
                           {user.status.charAt(0).toUpperCase() + user.status.slice(1)}
                         </span>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex gap-2">
-                          <Button 
-                            variant="outline" 
-                            size="sm"
-                            onClick={() => {
-                              setSelectedUser(user);
-                              setUserModalOpen(true);
-                            }}
-                          >
-                            <Edit className="h-4 w-4" />
-                          </Button>
-                          <Button 
-                            variant="destructive" 
-                            size="sm"
-                            onClick={() => handleDeleteUser(user.id)}
-                          >
-                            <Trash2 className="h-4 w-4" />
-                          </Button>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                      </div>
+                    </div>
+                    
+                    <div className="flex gap-2">
+                      <Button 
+                        variant="outline" 
+                        size="sm"
+                        onClick={() => {
+                          setSelectedUser(user);
+                          setUserModalOpen(true);
+                        }}
+                        className="flex-1"
+                      >
+                        <Edit className="h-3 w-3 mr-1" />
+                        Edit
+                      </Button>
+                      <Button 
+                        variant="destructive" 
+                        size="sm"
+                        onClick={() => handleDeleteUser(user.id)}
+                      >
+                        <Trash2 className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </CardContent>
           </Card>
         </TabsContent>

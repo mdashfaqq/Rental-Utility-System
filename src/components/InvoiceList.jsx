@@ -3,6 +3,7 @@ import { API_BASE_URL } from "@/services/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, Grid, List } from "lucide-react";
+import { Loading } from "@/components/ui/loading";
 export const InvoiceList = ({ onView }) => {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -50,19 +51,19 @@ console.log(data);
     return "paid";
   };
 
-  if (loading) return <div className="p-4">Loading...</div>;
+  if (loading) return <Loading message="Loading invoices" className="min-h-[320px]" />;
 
   return (
-    <div className="p-8">
+    <div className="p-4 sm:p-8">
 
-      <h1 className="text-2xl font-semibold mb-6">
+      <h1 className="font-display text-2xl font-normal mb-6">
         Invoices
       </h1>
 
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex items-center justify-between gap-4 flex-col sm:flex-row">
 
         {/* SEARCH */}
-<div className="relative w-full">
+<div className="relative w-full sm:w-auto flex-1">
   <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
 
   <Input
@@ -94,10 +95,12 @@ console.log(data);
         </div> */}
       </div>
 <br />
-      <div className="bg-white rounded-xl border shadow-sm overflow-hidden">
-        <table className="w-full text-sm table-fixed">
+      
+      {/* Desktop Table View */}
+      <div className="hidden md:block bg-card rounded-2xl border overflow-hidden">
+        <table className="w-full text-sm">
 
-          <thead className="bg-gray-50 text-gray-500">
+          <thead className="bg-muted/50 text-muted-foreground">
             <tr>
               <th className="px-6 py-3 text-left">#</th>
               <th className="px-6 py-3">Customer</th>
@@ -160,6 +163,55 @@ console.log(data);
           </tbody>
 
         </table>
+      </div>
+
+      {/* Mobile Card View */}
+      <div className="md:hidden space-y-3">
+        {filtered.length === 0 ? (
+          <div className="text-center py-6 text-gray-400">
+            No invoices found
+          </div>
+        ) : (
+          filtered.map((inv) => {
+            const status = getStatus(inv);
+            const total = Number(inv.total_amount || 0);
+            const paid = Number(inv.paid_amount || 0);
+            const balance = total - paid;
+
+            return (
+              <div
+                key={inv.id}
+                onClick={() => onView(inv.id)}
+                className="bg-card rounded-2xl border p-4 cursor-pointer"
+              >
+                <div className="flex justify-between items-start mb-3">
+                  <div>
+                    <p className="font-medium text-sm">#{inv.id}</p>
+                    <p className="text-xs text-gray-500">{inv.created_at?.split(" ")[0]}</p>
+                  </div>
+                  <span className={`px-2 py-1 text-xs rounded-full ${
+                    status === "paid"
+                      ? "bg-green-100 text-green-700"
+                      : status === "partial"
+                      ? "bg-yellow-100 text-yellow-700"
+                      : "bg-red-100 text-red-700"
+                  }`}>
+                    {status}
+                  </span>
+                </div>
+                <div className="mb-2">
+                  <p className="font-medium text-sm">{inv.customer_name}</p>
+                  <p className="text-xs text-gray-500">{inv.customer_phone}</p>
+                </div>
+                <div className="grid grid-cols-3 gap-2 text-xs">
+                  <div><span className="text-gray-500">Total:</span> ₹{total}</div>
+                  <div><span className="text-gray-500">Paid:</span> ₹{paid}</div>
+                  <div><span className="text-gray-500">Balance:</span> <span className="text-red-600 font-medium">₹{balance.toFixed(2)}</span></div>
+                </div>
+              </div>
+            );
+          })
+        )}
       </div>
 
     </div>

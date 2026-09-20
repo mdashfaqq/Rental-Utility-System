@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { API_BASE_URL } from "@/services/api";
 import { Input } from "@/components/ui/input";
 import { Users } from "lucide-react";
+import { Loading } from "@/components/ui/loading";
 
 export const CustomerListForLedger = ({ onSelect }) => {
   const [customers, setCustomers] = useState([]);
@@ -46,11 +47,7 @@ export const CustomerListForLedger = ({ onSelect }) => {
 
   // ⏳ LOADING
   if (loading) {
-    return (
-      <div className="p-6 text-center text-gray-500">
-        Loading customers...
-      </div>
-    );
+    return <Loading message="Loading customers" className="min-h-[320px]" />;
   }
 
   return (
@@ -58,8 +55,8 @@ export const CustomerListForLedger = ({ onSelect }) => {
 
       {/* HEADER */}
       <div className="flex items-center gap-2">
-        <Users className="text-blue-600" />
-        <h1 className="text-xl font-semibold">
+        <Users className="text-foreground" />
+        <h1 className="font-display text-2xl font-normal">
           Customer Ledger
         </h1>
       </div>
@@ -79,7 +76,7 @@ export const CustomerListForLedger = ({ onSelect }) => {
       )}
 
       {/* LIST */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
 
         {filtered.map((c) => (
           <div
@@ -90,7 +87,7 @@ export const CustomerListForLedger = ({ onSelect }) => {
     phone: c.customer_phone
   })
 }
-            className="bg-white border rounded-xl p-4 shadow hover:shadow-md cursor-pointer transition"
+            className="bg-card border rounded-2xl p-4 shadow-soft cursor-pointer transition"
           >
 
             {/* NAME */}

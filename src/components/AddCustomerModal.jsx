@@ -172,9 +172,9 @@ if (data.success) {
         </div>
 
         <form onSubmit={e => { e.preventDefault(); handleSubmit(); }}>
-          <div className="px-6 py-5">
+          <div className="px-4 sm:px-6 py-4 sm:py-5">
             {/* Fields */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               <div>
                 <label className="block text-sm font-medium mb-1 text-yellow-900 flex items-center gap-1">
                   <User className="h-4 w-4 opacity-70" /> Name <span className="text-red-600">*</span>
@@ -263,7 +263,7 @@ if (data.success) {
     Customer Status
   </label>
 
-  <div className="grid grid-cols-2 gap-3">
+  <div className="grid grid-cols-2 gap-2 sm:gap-3">
 
     <button
       type="button"
@@ -348,7 +348,7 @@ if (data.success) {
               </Button>
             </div>
             {showMore && (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pb-2 animate-fadeIn">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 pb-2 animate-fadeIn">
                 <div>
                   <label className="block text-sm font-medium mb-1 text-yellow-900">City</label>
                   <Input
@@ -440,7 +440,7 @@ if (data.success) {
             </Button>
 <Button
   type="submit"
-  className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg px-5 font-semibold border border-blue-800"
+  className="px-5 font-semibold"
 >
   Save
 </Button>

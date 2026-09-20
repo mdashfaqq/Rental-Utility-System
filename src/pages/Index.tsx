@@ -1,5 +1,5 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Sidebar } from '@/components/Sidebar';
 import { Dashboard } from '@/components/Dashboard';
 import { POSInterface } from '@/components/POSInterface';
@@ -19,6 +19,7 @@ import { Toaster } from '@/components/ui/sonner';
 import { Loading } from '@/components/ui/loading';
 import { Button } from '@/components/ui/button';
 import { RefreshCw, AlertCircle } from 'lucide-react';
+import { MobileNav } from '@/components/MobileNav';
 import { Login } from '@/components/auth/Login';
 import { Register } from '@/components/auth/Register';
 import GlassPrescriptionSlip from '@/components/GlassPrescriptionSlip';
@@ -38,12 +39,24 @@ const [activeTab, setActiveTabState] = useState(() => {
   return localStorage.getItem("activeTab") || initialTab || "dashboard";
 });
 
-const [inventoryFilter, setInventoryFilter] =
-  useState("");
+const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+const [isMobile, setIsMobile] = useState(false);
+
 const setActiveTab = (tab: string) => {
   localStorage.setItem("activeTab", tab);
   setActiveTabState(tab);
 };
+
+// Detect mobile screen size
+useEffect(() => {
+  const checkMobile = () => {
+    setIsMobile(window.innerWidth < 1024);
+  };
+  
+  checkMobile();
+  window.addEventListener('resize', checkMobile);
+  return () => window.removeEventListener('resize', checkMobile);
+}, []);
   const { loading, error, fetchData } = useData();
 const [selectedQuotationId, setSelectedQuotationIdState] = useState(() => {
   return localStorage.getItem("selectedQuotationId");
@@ -75,20 +88,20 @@ const setSelectedInvoiceId = (id: any) => {
 };
   const renderContent = () => {
     if (loading) {
-      return <Loading message="Loading application data..." className="min-h-[400px]" />;
+      return <Loading message="Loading workspace" className="min-h-[400px]" />;
     }
 
     if (error) {
       return (
         <div className="flex items-center justify-center min-h-[400px]">
-          <div className="text-center p-6 bg-red-50 rounded-lg border border-red-200">
-            <AlertCircle className="h-8 w-8 text-red-600 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold text-red-800 mb-2">Connection Error</h3>
-            <p className="text-red-600 mb-4">{error}</p>
-            <p className="text-sm text-red-600 mb-4">
+          <div className="text-center p-6 bg-card rounded-2xl border border-border shadow-soft">
+            <AlertCircle className="h-8 w-8 text-destructive mx-auto mb-4" />
+            <h3 className="text-lg font-semibold mb-2">Connection Error</h3>
+            <p className="text-muted-foreground mb-4">{error}</p>
+            <p className="text-sm text-muted-foreground mb-4">
               Make sure the backend server is running and accessible.
             </p>
-            <Button onClick={fetchData} variant="outline" className="border-red-300 text-red-600 hover:bg-red-50">
+            <Button onClick={fetchData} variant="outline">
               <RefreshCw className="h-4 w-4 mr-2" />
               Retry Connection
             </Button>
@@ -102,7 +115,6 @@ const setSelectedInvoiceId = (id: any) => {
   return <Dashboard
   onTabChange={setActiveTab}
   setSelectedInvoiceId={setSelectedInvoiceId}
-  setInventoryFilter={setInventoryFilter}
 />;
       case 'pos':
         return <POSInterface 
@@ -117,7 +129,7 @@ const setSelectedInvoiceId = (id: any) => {
       case 'vendors':
         return <VendorManagement />;
       case 'inventory':
-        return <InventoryManagement />;
+        return <InventoryManagement inventoryFilter="" />;
 case 'reports':
   return <Reports />;
   case "delivery-challans":
@@ -237,15 +249,29 @@ case "invoice-details":
      case 'Login':
         return <Login />;
       default:
-        return <Dashboard onTabChange={setActiveTab} />;
+        return <Dashboard onTabChange={setActiveTab} setSelectedInvoiceId={setSelectedInvoiceId} />;
     }
   };
 
   return (
-    <div className="flex h-screen bg-gray-100">
-      <Sidebar activeTab={activeTab} onTabChange={setActiveTab} />
-      <main className="flex-1 overflow-auto">
-        {renderContent()}
+    <div className="flex h-[100dvh] bg-background">
+      <div className="hidden lg:block h-full">
+        <Sidebar
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          isMobileMenuOpen={isMobileMenuOpen}
+          onMobileMenuClose={() => setIsMobileMenuOpen(false)}
+        />
+      </div>
+      <main className={`flex-1 min-w-0 min-h-0 flex flex-col ${activeTab === 'pos' ? 'overflow-hidden' : 'overflow-auto'}`}>
+        <div className={`flex-1 min-w-0 min-h-0 ${activeTab === 'pos' ? 'overflow-hidden' : ''} pb-24 lg:pb-3 lg:pr-3 lg:pt-3`}>
+          <div className="h-full w-full min-w-0 lg:rounded-3xl lg:soft-panel lg:overflow-hidden">
+            <div className={`w-full min-w-0 ${activeTab === 'pos' ? 'h-full overflow-hidden' : 'h-full overflow-auto'}`}>
+              {renderContent()}
+            </div>
+          </div>
+        </div>
+        <MobileNav activeTab={activeTab} onTabChange={setActiveTab} />
       </main>
     </div>
   );

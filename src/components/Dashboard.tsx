@@ -162,43 +162,43 @@ const QUICK_ACTIONS = [
     id: "pos",
     title: "POS System",
     icon: ShoppingCart,
-    color: "text-green-600",
-    bg: "bg-green-100"
+    color: "text-sage",
+    bg: "bg-champagne"
   },
   {
     id: "master-products",
     title: "Product Master",
     icon: Package,
-    color: "text-orange-600",
-    bg: "bg-orange-100"
+    color: "text-foreground",
+    bg: "bg-accent"
   },
   {
     id: "master-categories",
     title: "Category Master",
     icon: PieChart,
-    color: "text-pink-600",
-    bg: "bg-pink-100"
+    color: "text-foreground",
+    bg: "bg-muted"
   },
   {
     id: "master-vendors",
     title: "Vendor Master",
     icon: Users,
-    color: "text-blue-600",
-    bg: "bg-blue-100"
+    color: "text-foreground",
+    bg: "bg-champagne"
   },
   {
     id: "reports",
     title: "Reports & Analytics",
     icon: BarChart3,
-    color: "text-yellow-600",
-    bg: "bg-yellow-100"
+    color: "text-foreground",
+    bg: "bg-accent"
   },
   {
     id: "settings",
     title: "Settings",
     icon: Settings,
-    color: "text-gray-600",
-    bg: "bg-gray-100"
+    color: "text-muted-foreground",
+    bg: "bg-muted"
   }
 ];
 
@@ -375,8 +375,8 @@ const statsCards = [
     title: "Total Revenue",
     value: `₹${totalRevenue.toLocaleString()}`,
     icon: IndianRupee,
-    color: 'text-green-600',
-    bgColor: 'bg-green-100',
+    color: 'text-sage',
+    bgColor: 'bg-champagne',
     change: `${totalInvoices} invoices`,
     changeType: 'neutral'
   },
@@ -384,8 +384,8 @@ const statsCards = [
     title: "Today's Revenue",
     value: `₹${todaysRevenue.toLocaleString()}`,
     icon: TrendingUp,
-    color: 'text-blue-600',
-    bgColor: 'bg-blue-100',
+    color: 'text-foreground',
+    bgColor: 'bg-accent',
     change: `${invoices.filter(inv =>
       new Date(inv.created_at).toDateString() === today
     ).length} invoices`,
@@ -395,8 +395,8 @@ const statsCards = [
     title: "Items Sold",
     value: totalItemsSold.toString(),
     icon: Package,
-    color: 'text-purple-600',
-    bgColor: 'bg-purple-100',
+    color: 'text-foreground',
+    bgColor: 'bg-muted',
     change: "From invoice items",
     changeType: 'neutral'
   },
@@ -404,8 +404,8 @@ const statsCards = [
     title: "Pending Payments",
     value: `₹${totalPending.toLocaleString()}`,
     icon: AlertTriangle,
-    color: 'text-red-600',
-    bgColor: 'bg-red-100',
+    color: 'text-destructive',
+    bgColor: 'bg-destructive/10',
     change: "Outstanding",
     changeType: totalPending > 0 ? 'decrease' : 'neutral'
   }
@@ -416,15 +416,15 @@ const statsCards = [
       title: t('Active Vendors'),
       value: totalVendors.toString(),
       icon: Users,
-      color: 'text-indigo-600',
-      bgColor: 'bg-indigo-100'
+      color: 'text-foreground',
+      bgColor: 'bg-muted'
     },
     {
       title: t('Avg. Transaction'),
       value: `₹${transactions.length > 0 ? Math.round(totalSales / transactions.length) : 0}`,
       icon: Target,
-      color: 'text-orange-600',
-      bgColor: 'bg-orange-100'
+      color: 'text-foreground',
+      bgColor: 'bg-accent'
     }
   ];
 
@@ -433,20 +433,21 @@ const statsCards = [
                   currentTime.getHours() < 17 ? 'Good Afternoon' : 'Good Evening';
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-indigo-100">
-      <div className="space-y-8 p-6 md:p-8 transition-all duration-300">
+    <div className="min-h-full bg-transparent">
+      <div className="space-y-6 p-4 sm:p-6 md:p-8">
         
         {/* Enhanced Header */}
-     <div className="relative rounded-2xl bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-700 p-8 text-white shadow-2xl">
+     <div className="relative rounded-3xl bg-card border border-black/[0.04] p-6 md:p-8 shadow-soft">
         
           <div className="relative z-10">
             <div className="flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
               <div>
-                <h1 className="text-4xl md:text-5xl font-bold mb-2">
-                  {greeting}, {user?.name || 'User'}! 👋
+                <p className="text-[11px] uppercase tracking-[0.2em] text-muted-foreground mb-2">Today's overview</p>
+                <h1 className="font-display text-3xl md:text-5xl font-normal mb-2 text-foreground">
+                  {greeting}, {user?.name || 'User'}
                 </h1>
-                <p className="text-blue-100 text-lg">
-                  {t('Welcome to Grocery POS')} - Your business dashboard
+                <p className="text-muted-foreground">
+                  {t('Welcome to Grocery POS')}
                 </p>
 
               </div>
@@ -457,7 +458,7 @@ const statsCards = [
   {/* 🔔 Notification Bell */}
   <div className="relative" ref={notifRef}>
     <button onClick={() => setShowNotifications(!showNotifications)}>
-      <Bell className="h-6 w-6 text-white cursor-pointer" />
+      <Bell className="h-6 w-6 text-foreground cursor-pointer" />
     </button>
 
     {/* Badge */}
@@ -469,10 +470,10 @@ const statsCards = [
 
     {/* Dropdown */}
 {showNotifications && (
-  <div className="absolute right-0 top-12 w-80 bg-white rounded-xl shadow-2xl border z-50 overflow-hidden">
+  <div className="absolute right-0 top-12 w-80 bg-card rounded-2xl shadow-soft border z-50 overflow-hidden">
 
     {/* Header */}
-    <div className="p-3 border-b font-semibold text-gray-700 flex justify-between">
+    <div className="p-3 border-b font-semibold text-foreground flex justify-between">
       <span>Notifications</span>
       <span className="text-xs text-gray-400">{alerts.length}</span>
     </div>
@@ -488,7 +489,7 @@ const statsCards = [
         alerts.slice(0, 6).map((alert, index) => (
           <div
             key={index}
-            className="flex items-start justify-between p-3 hover:bg-gray-50 border-b text-sm"
+            className="flex items-start justify-between p-3 hover:bg-muted/60 border-b text-sm"
           >
             <div className="flex items-start space-x-2">
 
@@ -502,21 +503,21 @@ const statsCards = [
                 <CheckCircle2 className="h-4 w-4 text-green-500 mt-0.5" />
               )}
 
-              <span className="text-gray-700">{alert.message}</span>
+              <span className="text-foreground">{alert.message}</span>
             </div>
 
             {/* Actions */}
             {alert.product ? (
               <button
                 onClick={() => handleStockIn(alert.product)}
-                className="text-xs text-blue-600 hover:underline"
+                className="text-xs text-foreground underline-offset-4 hover:underline"
               >
                 Fix
               </button>
             ) : alert.message.includes("Sales") ? (
               <button
                 onClick={() => onTabChange("reports")}
-                className="text-xs text-blue-600 hover:underline"
+                className="text-xs text-foreground underline-offset-4 hover:underline"
               >
                 View
               </button>
@@ -542,7 +543,7 @@ const statsCards = [
 
   {/* 📅 Date */}
   <div className="text-center">
-    <div className="flex items-center text-blue-100 mb-1">
+    <div className="flex items-center text-muted-foreground mb-1">
       <Calendar className="h-4 w-4 mr-2" />
       <span className="text-sm">Today</span>
     </div>
@@ -557,7 +558,7 @@ const statsCards = [
 
   {/* ⏰ Time */}
   <div className="text-center">
-    <div className="flex items-center text-blue-100 mb-1">
+    <div className="flex items-center text-muted-foreground mb-1">
       <Clock className="h-4 w-4 mr-2" />
       <span className="text-sm">Time</span>
     </div>
@@ -574,16 +575,14 @@ const statsCards = [
           </div>
           
           {/* Decorative elements */}
-          <div className="absolute -top-4 -right-4 w-24 h-24 bg-white/10 rounded-full"></div>
-          <div className="absolute -bottom-8 -left-8 w-32 h-32 bg-white/5 rounded-full"></div>
         </div>
 
         {/* Enhanced Stats Cards */}
-<div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+<div className="flex gap-4 overflow-x-auto snap-x snap-mandatory pb-2 xl:grid xl:grid-cols-4 xl:overflow-visible">
   {statsCards.map((stat, index) => (
     <Card
       key={index}
-      className="relative overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 border-0 shadow-lg"
+      className="min-w-[78%] sm:min-w-[46%] xl:min-w-0 snap-start"
     >
       <CardContent className="p-4 sm:p-6">
         <div className="flex items-start justify-between gap-3 mb-4">
@@ -598,7 +597,7 @@ const statsCards = [
                 ? 'text-green-700 bg-green-100'
                 : stat.changeType === 'decrease'
                 ? 'text-red-700 bg-red-100'
-                : 'text-gray-600 bg-gray-100'
+                : 'text-muted-foreground bg-muted'
             }`}
           >
             {stat.changeType === 'increase' && (
@@ -614,11 +613,11 @@ const statsCards = [
         </div>
 
         <div className="min-w-0">
-          <p className="text-sm font-medium text-gray-600 mb-1 truncate">
+          <p className="text-sm font-medium text-muted-foreground mb-1 truncate">
             {stat.title}
           </p>
 
-          <p className="text-2xl sm:text-3xl font-bold text-gray-900 break-words">
+          <p className="text-2xl sm:text-3xl font-semibold text-foreground break-words">
             {stat.value}
           </p>
         </div>
@@ -627,15 +626,14 @@ const statsCards = [
   ))}
 </div>
 
-<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6 gap-3">
+<div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-3 xl:grid-cols-6 gap-3">
   {QUICK_ACTIONS.map((action) => (
     <button
       key={action.id}
       onClick={() => onTabChange(action.id)}
-      className="flex items-center gap-3 px-3 py-3 rounded-xl
-                 border border-gray-200 bg-white
-                 hover:bg-gray-50 hover:border-gray-300
-                 hover:shadow-md active:scale-95
+      className="flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-2 sm:gap-3 px-3 py-3 rounded-xl
+                 border border-border bg-card
+                 hover:bg-muted/60
                  transition-all duration-200
                  min-w-0"
     >
@@ -649,7 +647,7 @@ const statsCards = [
       </div>
 
       {/* Label */}
-      <span className="text-sm font-medium text-gray-700 truncate">
+      <span className="text-xs sm:text-sm font-medium text-foreground truncate text-center sm:text-left">
         {action.title}
       </span>
     </button>
@@ -731,16 +729,16 @@ const statsCards = [
         </div> */}
 
         {/* Enhanced Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
           
           
           {/* Recent Transactions - Enhanced */}
-<Card className="lg:col-span-2 border-0 shadow-lg h-[650px]">
+<Card className="lg:col-span-2 h-[500px] lg:h-[650px]">
 
-            <CardHeader className="bg-gradient-to-r from-gray-50 to-gray-100 rounded-t-lg">
+            <CardHeader className="bg-muted/40 rounded-t-2xl border-b border-border/60">
               <div className="flex items-center justify-between">
-                <CardTitle className="flex items-center text-xl">
-                  <Activity className="h-6 w-6 text-blue-600 mr-3" />
+                <CardTitle className="flex items-center text-xl font-display font-normal">
+                  <Activity className="h-5 w-5 text-sage mr-3" />
                   {t('Recent Transactions')}
                 </CardTitle>
                 <div className="flex space-x-2">
@@ -768,10 +766,10 @@ const statsCards = [
     setStatusFilter("");
     fetchInvoices();
   }}
-  className="p-2 hover:bg-gray-200 rounded-lg transition-colors"
+  className="p-2 hover:bg-muted rounded-lg transition-colors"
 >
 <RefreshCw
-  className={`h-4 w-4 text-gray-600 ${
+  className={`h-4 w-4 text-muted-foreground ${
     loading ? "animate-spin" : ""
   }`}
 />
@@ -798,7 +796,7 @@ const statsCards = [
 
   cursor-pointer
 
-  flex items-center justify-between p-4 hover:bg-gray-50 transition-colors ${
+  flex items-center justify-between p-4 hover:bg-muted/50 transition-colors ${
       index !==
 invoices
   .filter(inv =>
@@ -812,17 +810,17 @@ invoices
     <div className="flex items-center space-x-4">
       
       {/* ICON */}
-      <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
-        <FileText className="h-6 w-6 text-blue-600" />
+      <div className="w-12 h-12 bg-accent rounded-full flex items-center justify-center">
+        <FileText className="h-6 w-6 text-foreground" />
       </div>
 
       {/* DETAILS */}
       <div>
-        <p className="font-semibold text-gray-900">
+        <p className="font-semibold text-foreground">
           Invoice #{inv.id}
         </p>
 
-        <div className="flex items-center space-x-3 text-sm text-gray-600">
+        <div className="flex items-center space-x-3 text-sm text-muted-foreground">
           <span>{inv.customer_name || "Walk-in"}</span>
           <span>•</span>
           <span className={`capitalize ${
@@ -851,7 +849,7 @@ invoices
 
     {/* AMOUNT */}
     <div className="text-right">
-      <p className="font-bold text-blue-600 text-lg">
+      <p className="font-bold text-foreground text-lg">
         ₹{Number(inv.total_amount || 0).toFixed(2)}
       </p>
       <p className="text-xs text-gray-500">
@@ -863,7 +861,7 @@ invoices
   {loading && (
   <div className="flex items-center justify-center h-full py-12">
     <div className="text-center">
-      <RefreshCw className="h-8 w-8 animate-spin text-blue-600 mx-auto mb-3" />
+      <RefreshCw className="h-8 w-8 animate-spin text-muted-foreground mx-auto mb-3" />
       <p className="text-gray-500">Loading transactions...</p>
     </div>
   </div>
@@ -883,10 +881,10 @@ invoices
           <div className="space-y-6">
             
             {/* Stock Alerts - Enhanced */}
-      <Card className="border-0 shadow-lg h-[320px] flex flex-col">
-  <CardHeader className="bg-gradient-to-r from-red-50 to-pink-50 rounded-t-lg">
-    <CardTitle className="flex items-center text-lg">
-      <AlertTriangle className="h-5 w-5 text-red-600 mr-2" />
+      <Card className="h-[320px] flex flex-col">
+  <CardHeader className="bg-muted/40 rounded-t-2xl">
+    <CardTitle className="flex items-center text-lg font-display font-normal">
+      <AlertTriangle className="h-5 w-5 text-destructive mr-2" />
       {t('Stock Alerts')}
       
       <span className="ml-auto bg-red-100 text-red-800 text-xs font-medium px-2 py-1 rounded-full">
@@ -959,10 +957,10 @@ setStockType("in");
   </CardContent>
 </Card>
             {/* Recent Activity */}
-            <Card className="border-0 shadow-lg">
-              <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-t-lg">
-                <CardTitle className="flex items-center text-lg">
-                  <Bell className="h-5 w-5 text-blue-600 mr-2" />
+            <Card>
+              <CardHeader className="bg-muted/40 rounded-t-2xl">
+                <CardTitle className="flex items-center text-lg font-display font-normal">
+                  <Bell className="h-5 w-5 text-foreground mr-2" />
                   {t('Recent Activity')}
                 </CardTitle>
               </CardHeader>
@@ -1053,27 +1051,27 @@ setStockType("in");
 
         {/* Top Products Section */}
         {topProducts.length > 0 && (
-          <Card className="border-0 shadow-lg">
-            <CardHeader className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-t-lg">
-              <CardTitle className="flex items-center text-xl">
-                <Star className="h-6 w-6 text-purple-600 mr-3" />
+          <Card>
+            <CardHeader className="bg-muted/40 rounded-t-2xl">
+              <CardTitle className="flex items-center text-xl font-display font-normal">
+                <Star className="h-6 w-6 text-foreground mr-3" />
                 {t('Top Rented Products')}
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-6">
-              <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+            <CardContent className="p-4 sm:p-6">
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3 sm:gap-4">
                 {topProducts.map((product, index) => (
                   <div
                     key={product.id}
-                    className="bg-white rounded-xl p-4 border border-gray-100 hover:shadow-md transition-all duration-300 hover:-translate-y-1"
+                    className="bg-white rounded-xl p-3 sm:p-4 border border-gray-100 hover:shadow-md transition-all duration-300 hover:-translate-y-1"
                   >
                     <div className="text-center">
-                      <div className="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                        <Package className="h-6 w-6 text-purple-600" />
+                      <div className="w-10 h-10 sm:w-12 sm:h-12 bg-accent rounded-full flex items-center justify-center mx-auto mb-2 sm:mb-3">
+                        <Package className="h-5 w-5 sm:h-6 sm:w-6 text-purple-600" />
                       </div>
-                      <h3 className="font-semibold text-gray-900 text-sm mb-1">{product.name}</h3>
-                      <p className="text-xs text-gray-600 mb-2">{product.category}</p>
-                      <p className="text-lg font-bold text-purple-600">₹{product.price}</p>
+                      <h3 className="font-semibold text-gray-900 text-xs sm:text-sm mb-1 truncate">{product.name}</h3>
+                      <p className="text-xs text-gray-600 mb-1 sm:mb-2 truncate">{product.category}</p>
+                      <p className="text-sm sm:text-lg font-bold text-purple-600">₹{product.price}</p>
                       <p className="text-xs text-gray-500">{product.soldCount || 0} Rented</p>
                     </div>
                   </div>

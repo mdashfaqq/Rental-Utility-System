@@ -3,9 +3,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Eye, EyeOff, LogIn } from 'lucide-react';
+import { LogIn } from 'lucide-react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from './AuthContext';
+import { Spinner } from '@/components/ui/loading';
 
 interface LoginProps {
   onLogin?: (username: string, password: string) => Promise<boolean> | boolean | void;
@@ -93,13 +94,16 @@ export const Login = ({ onLogin, onSwitchToRegister }: LoginProps) => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold text-gray-800">
-            Welcome Back
+    <div className="min-h-screen bg-background flex items-center justify-center p-6 relative overflow-hidden">
+      <div className="pointer-events-none absolute -top-24 -right-16 h-72 w-72 rounded-full bg-accent/80 blur-3xl" />
+      <div className="pointer-events-none absolute -bottom-24 -left-10 h-72 w-72 rounded-full bg-champagne blur-3xl" />
+      <Card className="w-full max-w-md relative">
+        <CardHeader className="text-center space-y-2">
+          <p className="text-[11px] uppercase tracking-[0.22em] text-muted-foreground">Premier Rentals</p>
+          <CardTitle className="font-display text-4xl font-normal text-foreground">
+            Welcome back
           </CardTitle>
-          <p className="text-gray-600">Sign in to your account</p>
+          <p className="text-muted-foreground">Sign in to your workspace</p>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -121,7 +125,7 @@ export const Login = ({ onLogin, onSwitchToRegister }: LoginProps) => {
   <div className="relative">
   <Input
     id="password"
-    type="password" // ❗ no toggle logic
+    type="password"
     value={formData.password}
     onChange={(e) =>
       setFormData({ ...formData, password: e.target.value })
@@ -134,19 +138,19 @@ export const Login = ({ onLogin, onSwitchToRegister }: LoginProps) => {
   </div>
 </div>
 
-            <Button type="submit" className="w-full" disabled={submitting}>
-              <LogIn className="h-4 w-4 mr-2" />
-              {submitting ? 'Signing In...' : 'Sign In'}
+            <Button type="submit" className="w-full h-11" disabled={submitting}>
+              {submitting ? <Spinner size="sm" className="mr-1" /> : <LogIn className="h-4 w-4" />}
+              {submitting ? 'Signing in' : 'Sign In'}
             </Button>
           </form>
 
           {onSwitchToRegister && (
             <div className="mt-6 text-center">
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-muted-foreground">
                 Don't have an account?{' '}
                 <button
                   onClick={onSwitchToRegister}
-                  className="text-blue-600 hover:text-blue-800 font-medium"
+                  className="text-foreground font-medium underline underline-offset-4"
                 >
                   Sign Up
                 </button>

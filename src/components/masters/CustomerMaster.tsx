@@ -139,12 +139,12 @@ const handleDelete = (customer: any) => {
 };
 
   return (
-    <div className="p-6 bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <div className="p-6 bg-transparent min-h-full">
 
       {/* HEADER */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-800">Customer Master</h1>
+          <h1 className="font-display text-3xl font-normal text-foreground">Customer Master</h1>
           <p className="text-gray-600">Manage your customers & billing details</p>
         </div>
 
@@ -153,13 +153,13 @@ const handleDelete = (customer: any) => {
             variant="outline"
             onClick={() => setViewMode(viewMode === 'grid' ? 'table' : 'grid')}
           >
-            {viewMode === 'grid' ? <Eye className="h-4 w-4 mr-2" /> : <Grid className="h-4 w-4 mr-2" />}
-            {viewMode === 'grid' ? 'Table View' : 'Grid View'}
+            {viewMode === 'grid' ? <Eye className="h-4 w-4" /> : <Grid className="h-4 w-4" />}
+            <span className="hidden md:inline ml-2">{viewMode === 'grid' ? 'Table View' : 'Grid View'}</span>
           </Button>
 
-          <Button onClick={handleAdd} className="bg-blue-600 hover:bg-blue-700">
-            <Plus className="h-4 w-4 mr-2" />
-            Add Customer
+          <Button onClick={handleAdd}>
+            <Plus className="h-4 w-4" />
+            <span className="hidden md:inline ml-2">Add Customer</span>
           </Button>
         </div>
       </div>
@@ -179,9 +179,9 @@ const handleDelete = (customer: any) => {
               />
             </div>
 
-            <div className="flex items-center justify-between bg-blue-50 p-3 rounded-lg">
-              <span className="text-sm font-medium text-blue-800">Total Customers</span>
-              <Badge className="bg-blue-600 text-white">
+            <div className="flex items-center justify-between bg-muted p-3 rounded-xl">
+              <span className="text-sm font-medium text-foreground">Total Customers</span>
+              <Badge>
                 {filteredCustomers.length}
               </Badge>
             </div>
@@ -195,87 +195,138 @@ const handleDelete = (customer: any) => {
         <Card className="shadow-lg">
           <CardHeader>
             <CardTitle className="flex items-center">
-              <Users className="h-5 w-5 mr-2 text-blue-600" />
+              <Users className="h-5 w-5 mr-2 text-foreground" />
               Customer List
             </CardTitle>
           </CardHeader>
 
           <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow className="bg-gray-50">
-                  <TableHead>Name</TableHead>
-                  <TableHead>Phone</TableHead>
-                  <TableHead>Email</TableHead>
-                  <TableHead>Address</TableHead>
-                  <TableHead> Status</TableHead>
-                  <TableHead className="text-center">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-
-              <TableBody>
-                {filteredCustomers.map((customer: any) => (
-<TableRow
-  key={customer.id}
-  className={
-    customer.status === 'inactive'
-      ? 'opacity-60 hover:bg-red-50 transition-colors'
-      : 'hover:bg-gray-50 transition-colors'
-  }
->
-                    <TableCell>
-                      <div className="flex items-center">
-                        <div className="p-3 bg-blue-100 rounded-full mr-3">
-                          <Users className="h-5 w-5 text-blue-600" />
-                        </div>
-                        <span className="font-medium">{customer.name}</span>
-                      </div>
-                    </TableCell>
-
-                    <TableCell>{customer.phone}</TableCell>
-                    <TableCell>{customer.email || '-'}</TableCell>
-                    <TableCell className="truncate max-w-xs">
-                      {customer.address || '-'}
-                    </TableCell>
-  <TableCell>
-    <Badge
-      className={
-        customer.status === "inactive"
-          ? "bg-red-100 text-red-700 border-red-200 hover:bg-red-100"
-          : customer.status === "blocked"
-          ? "bg-yellow-100 text-yellow-700 border-yellow-200 hover:bg-yellow-100"
-          : "bg-green-100 text-green-700 border-green-200 hover:bg-green-100"
-      }
-    >
-      {customer.status || "active"}
-    </Badge>
-  </TableCell>
-
-
-                    <TableCell>
-                      <div className="flex justify-center gap-2">
-
-                        <Button size="sm" variant="outline" onClick={() => handleEdit(customer)}>
-                          <Edit className="h-3 w-3 mr-1" />
-                          Edit
-                        </Button>
-
-                        <Button
-                          size="sm"
-                          variant="outline"
-                          className="text-red-600 hover:bg-red-50"
-                          onClick={() => handleDelete(customer)}
-                        >
-                          <Trash2 className="h-3 w-3" />
-                        </Button>
-
-                      </div>
-                    </TableCell>
-
+            {/* Desktop Table View */}
+            <div className="hidden md:block overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow className="bg-gray-50">
+                    <TableHead>Name</TableHead>
+                    <TableHead>Phone</TableHead>
+                    <TableHead>Email</TableHead>
+                    <TableHead>Address</TableHead>
+                    <TableHead> Status</TableHead>
+                    <TableHead className="text-center">Actions</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+
+                <TableBody>
+                  {filteredCustomers.map((customer: any) => (
+        <TableRow
+          key={customer.id}
+          className={
+            customer.status === 'inactive'
+              ? 'opacity-60 hover:bg-red-50 transition-colors'
+              : 'hover:bg-gray-50 transition-colors'
+          }
+        >
+                      <TableCell>
+                        <div className="flex items-center">
+                          <div className="p-3 bg-blue-100 rounded-full mr-3">
+                            <Users className="h-5 w-5 text-blue-600" />
+                          </div>
+                          <span className="font-medium">{customer.name}</span>
+                        </div>
+                      </TableCell>
+
+                      <TableCell>{customer.phone}</TableCell>
+                      <TableCell>{customer.email || '-'}</TableCell>
+                      <TableCell className="truncate max-w-xs">
+                        {customer.address || '-'}
+                      </TableCell>
+          <TableCell>
+            <Badge
+              className={
+                customer.status === "inactive"
+                  ? "bg-red-100 text-red-700 border-red-200 hover:bg-red-100"
+                  : customer.status === "blocked"
+                  ? "bg-yellow-100 text-yellow-700 border-yellow-200 hover:bg-yellow-100"
+                  : "bg-green-100 text-green-700 border-green-200 hover:bg-green-100"
+              }
+            >
+              {customer.status || "active"}
+            </Badge>
+          </TableCell>
+
+
+                      <TableCell>
+                        <div className="flex justify-center gap-2">
+
+                          <Button size="sm" variant="outline" onClick={() => handleEdit(customer)}>
+                            <Edit className="h-3 w-3 mr-1" />
+                            Edit
+                          </Button>
+
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="text-red-600 hover:bg-red-50"
+                            onClick={() => handleDelete(customer)}
+                          >
+                            <Trash2 className="h-3 w-3" />
+                          </Button>
+
+                        </div>
+                      </TableCell>
+
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+
+            {/* Mobile Card View */}
+            <div className="md:hidden space-y-3 p-3">
+              {filteredCustomers.map((customer: any) => (
+                <div key={customer.id} className={`bg-gray-50 rounded-lg p-3 border border-gray-200 ${customer.status === 'inactive' ? 'opacity-60' : ''}`}>
+                  <div className="flex items-center mb-2">
+                    <div className="p-2 bg-blue-100 rounded-full mr-3 flex-shrink-0">
+                      <Users className="h-4 w-4 text-blue-600" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-sm truncate">{customer.name}</p>
+                      <p className="text-xs text-gray-500">{customer.phone}</p>
+                    </div>
+                    <Badge
+                      className={`ml-2 flex-shrink-0 ${
+                        customer.status === "inactive"
+                          ? "bg-red-100 text-red-700 border-red-200"
+                          : customer.status === "blocked"
+                          ? "bg-yellow-100 text-yellow-700 border-yellow-200"
+                          : "bg-green-100 text-green-700 border-green-200"
+                      }`}
+                    >
+                      {customer.status || "active"}
+                    </Badge>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-2 mb-2 text-xs">
+                    <div><span className="text-gray-500">Email:</span> {customer.email || '-'}</div>
+                    <div><span className="text-gray-500">Address:</span> {customer.address || '-'}</div>
+                  </div>
+                  
+                  <div className="flex gap-2">
+                    <Button size="sm" variant="outline" onClick={() => handleEdit(customer)} className="flex-1">
+                      <Edit className="h-3 w-3" />
+                      <span className="hidden md:inline ml-1">Edit</span>
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="text-red-600 hover:bg-red-50"
+                      onClick={() => handleDelete(customer)}
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
           </CardContent>
         </Card>
       ) : (

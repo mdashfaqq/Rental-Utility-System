@@ -5,6 +5,7 @@ import { useRef } from "react";
 import { FILE_BASE_URL } from "@/services/api";
 import html2pdf from "html2pdf.js";
 import { Link } from "react-router-dom";
+import { Loading } from "@/components/ui/loading";
 export const InvoiceDetails = ({
   id,
   onBack,
@@ -406,11 +407,7 @@ const payRes = await fetch(
 
   // ⏳ LOADING STATE
   if (!invoice) {
-    return (
-      <div className="p-6 text-center text-gray-500">
-        Loading invoice...
-      </div>
-    );
+    return <Loading message="Loading invoice" className="min-h-[400px]" />;
   }
   
 
@@ -682,7 +679,7 @@ const amountInWords =
   Download Invoice
 </button>
 <Button
-  className="bg-blue-600 hover:bg-blue-700"
+  className=""
   onClick={handleSharePDF}
 >
   Share PDF
@@ -1039,7 +1036,7 @@ const amountInWords =
   <div className="bg-white rounded-2xl shadow-sm border border-gray-100 mb-6 overflow-hidden">
 
     {/* HEADER */}
-    <div className="flex items-center justify-between px-6 py-5 border-b bg-gradient-to-r from-green-50 to-emerald-50">
+    <div className="flex items-center justify-between px-6 py-5 border-b bg-muted/40">
 
       <div>
 
@@ -1074,7 +1071,7 @@ const amountInWords =
     </div>
 
     {/* SUMMARY */}
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-6 bg-gray-50 border-b">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 p-4 sm:p-6 bg-gray-50 border-b">
 
       {/* TOTAL */}
       <div className="bg-white rounded-xl p-4 border">
@@ -1259,10 +1256,10 @@ const amountInWords =
       <div className="mt-10">
 
   {/* TOP BAR */}
-  <div className="flex items-center justify-between mb-5">
+  <div className="flex items-center justify-between mb-5 flex-col sm:flex-row gap-4">
 
     <div>
-      <h2 className="text-2xl font-semibold tracking-tight">
+      <h2 className="text-xl sm:text-2xl font-semibold tracking-tight">
         Invoice Preview
       </h2>
 
@@ -1271,7 +1268,7 @@ const amountInWords =
       </p>
     </div>
 
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2 flex-wrap justify-center">
 
       <div className="px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-medium">
         A4 Format
@@ -1285,19 +1282,13 @@ const amountInWords =
   </div>
 
   {/* PREVIEW AREA */}
-  <div className="rounded-3xl border bg-gradient-to-b from-gray-100 to-gray-200 dark:from-gray-900 dark:to-gray-950 p-10 overflow-auto mb-5"></div>
+  <div className="rounded-3xl border bg-gradient-to-b from-gray-100 to-gray-200 dark:from-gray-900 dark:to-gray-950 p-4 sm:p-10 overflow-auto mb-5">
     <div
 id="print-section"
-className="
-  bg-white
-  flex-shrink-0
-  mx-auto
-  border border-gray-300
-  shadow-[0_25px_60px_rgba(0,0,0,0.18)]
-  rounded-sm
-"
-  style={{
+className="bg-white flex-shrink-0 mx-auto border border-gray-300 shadow-[0_25px_60px_rgba(0,0,0,0.18)] rounded-sm"
+style={{
     width: "794px",
+    maxWidth: "100%",
     overflow: "hidden",
     marginTop: "20px",
     marginBottom: "20px"
@@ -2178,6 +2169,6 @@ src="/Premier-Rentals/logo.jpg"
   </div>
 </div>
 
-    
+    </div>
   );
 };

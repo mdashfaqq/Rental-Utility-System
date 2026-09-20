@@ -60,10 +60,10 @@ const handleDelete = async (id: string) => {
 };
 
   return (
-    <div className="p-6 bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
-      <div className="flex items-center justify-between mb-6">
+    <div className="p-6 bg-transparent min-h-full">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">Category Master</h1>
+          <h1 className="font-display text-3xl font-normal text-foreground mb-2">Category Master</h1>
           <p className="text-gray-600">Manage product categories and organize your inventory</p>
         </div>
         <div className="flex gap-2">
@@ -71,12 +71,12 @@ const handleDelete = async (id: string) => {
             variant="outline"
             onClick={() => setViewMode(viewMode === 'grid' ? 'table' : 'grid')}
           >
-            {viewMode === 'grid' ? <Eye className="h-4 w-4 mr-2" /> : <Grid className="h-4 w-4 mr-2" />}
-            {viewMode === 'grid' ? 'Table View' : 'Grid View'}
+            {viewMode === 'grid' ? <Eye className="h-4 w-4" /> : <Grid className="h-4 w-4" />}
+            <span className="hidden md:inline ml-2">{viewMode === 'grid' ? 'Table View' : 'Grid View'}</span>
           </Button>
-          <Button onClick={handleAdd} className="bg-blue-600 hover:bg-blue-700">
-            <Plus className="h-4 w-4 mr-2" />
-            Add Category
+          <Button onClick={handleAdd}>
+            <Plus className="h-4 w-4" />
+            <span className="hidden md:inline ml-2">Add Category</span>
           </Button>
         </div>
       </div>
@@ -93,9 +93,9 @@ const handleDelete = async (id: string) => {
                 className="pl-10"
               />
             </div>
-            <div className="flex items-center justify-between bg-blue-50 p-3 rounded-lg">
-              <span className="text-sm font-medium text-blue-800">Total Categories:</span>
-              <Badge variant="secondary" className="bg-blue-600 text-white">
+            <div className="flex items-center justify-between bg-muted p-3 rounded-xl">
+              <span className="text-sm font-medium text-foreground">Total Categories:</span>
+              <Badge>
                 {filteredCategories.length}
               </Badge>
             </div>
@@ -107,135 +107,220 @@ const handleDelete = async (id: string) => {
         <Card className="shadow-lg">
           <CardHeader>
             <CardTitle className="flex items-center">
-              <Grid className="h-5 w-5 mr-2 text-green-600" />
+              <Grid className="h-5 w-5 mr-2" />
               Category List
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow className="bg-gray-50">
-                  <TableHead className="font-semibold">Category</TableHead>
-                  <TableHead className="font-semibold">Description</TableHead>
-                  <TableHead className="font-semibold">Sub-Categories</TableHead>
-                  <TableHead className="font-semibold text-center">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredCategories.map((category) => (
-                  <TableRow key={category.id} className="hover:bg-gray-50 transition-colors">
-                    <TableCell>
-                      <div className="flex items-center">
-                        <div className="p-3 bg-green-100 rounded-full mr-4">
-                          <Grid className="h-5 w-5 text-green-600" />
-                        </div>
-                        <div className="font-medium text-gray-900">{category.name}</div>
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-gray-700">{category.description}</TableCell>
-<TableCell>
-  <div className="flex flex-wrap gap-1">
-
-    {Array.isArray(category.subcategories) &&
-    category.subcategories.length > 0 ? (
-      <>
-        {category.subcategories
-          .slice(
-            0,
-            expandedCategory === String(category.id)
-              ? undefined
-              : 2
-          )
-          .map((sub, index) => (
-            <Badge
-              key={index}
-              variant="outline"
-              className="
-                text-xs
-                bg-blue-50
-                text-blue-700
-                border-blue-200
-              "
-            >
-              {sub}
-            </Badge>
-        ))}
-
-        {/* SHOW MORE */}
-        {category.subcategories.length > 2 &&
-          expandedCategory !== String(category.id) && (
-            <button
-              type="button"
-              onClick={() =>
-                setExpandedCategory(String(category.id))
-              }
-            >
-              <Badge
-                variant="secondary"
-                className="
-                  text-xs
-                  cursor-pointer
-                  hover:bg-gray-200
-                  transition-colors
-                "
-              >
-                +{category.subcategories.length - 2}
-              </Badge>
-            </button>
-        )}
-
-        {/* SHOW LESS */}
-        {expandedCategory === String(category.id) && (
-          <button
-            type="button"
-            onClick={() => setExpandedCategory(null)}
-          >
-            <Badge
-              variant="secondary"
-              className="
-                text-xs
-                cursor-pointer
-                hover:bg-gray-200
-              "
-            >
-              Show Less
-            </Badge>
-          </button>
-        )}
-      </>
-    ) : (
-      <span className="text-gray-400 text-sm">
-        No Subcategories
-      </span>
-    )}
-
-  </div>
-</TableCell>
-                    <TableCell>
-                      <div className="flex justify-center space-x-2">
-                        <Button 
-                          variant="outline" 
-                          size="sm"
-                          onClick={() => handleEdit(category)}
-                          className="hover:bg-blue-50"
-                        >
-                          <Edit className="h-3 w-3 mr-1" />
-                          Edit
-                        </Button>
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
-                          className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                          onClick={() => handleDelete(category.id)}
-                        >
-                          <Trash2 className="h-3 w-3" />
-                        </Button>
-                      </div>
-                    </TableCell>
+            {/* Desktop Table View */}
+            <div className="hidden md:block overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow className="bg-gray-50">
+                    <TableHead className="font-semibold">Category</TableHead>
+                    <TableHead className="font-semibold">Description</TableHead>
+                    <TableHead className="font-semibold">Sub-Categories</TableHead>
+                    <TableHead className="font-semibold text-center">Actions</TableHead>
                   </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredCategories.map((category) => (
+                    <TableRow key={category.id} className="hover:bg-gray-50 transition-colors">
+                      <TableCell>
+                        <div className="flex items-center">
+                          <div className="p-3 bg-green-100 rounded-full mr-4">
+                            <Grid className="h-5 w-5 text-green-600" />
+                          </div>
+                          <div className="font-medium text-gray-900">{category.name}</div>
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-gray-700">{category.description}</TableCell>
+      <TableCell>
+        <div className="flex flex-wrap gap-1">
+
+          {Array.isArray(category.subcategories) &&
+          category.subcategories.length > 0 ? (
+            <>
+              {category.subcategories
+                .slice(
+                  0,
+                  expandedCategory === String(category.id)
+                    ? undefined
+                    : 2
+                )
+                .map((sub, index) => (
+                  <Badge
+                    key={index}
+                    variant="outline"
+                    className="text-xs bg-champagne text-foreground border-transparent font-medium"
+                  >
+                    {sub}
+                  </Badge>
                 ))}
-              </TableBody>
-            </Table>
+
+              {/* SHOW MORE */}
+              {category.subcategories.length > 2 &&
+                expandedCategory !== String(category.id) && (
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setExpandedCategory(String(category.id))
+                    }
+                  >
+                    <Badge
+                      variant="secondary"
+                      className="
+                        text-xs
+                        cursor-pointer
+                        hover:bg-gray-200
+                        transition-colors
+                      "
+                    >
+                      +{category.subcategories.length - 2}
+                    </Badge>
+                  </button>
+              )}
+
+              {/* SHOW LESS */}
+              {expandedCategory === String(category.id) && (
+                <button
+                  type="button"
+                  onClick={() => setExpandedCategory(null)}
+                >
+                  <Badge
+                    variant="secondary"
+                    className="
+                      text-xs
+                      cursor-pointer
+                      hover:bg-gray-200
+                    "
+                  >
+                    Show Less
+                  </Badge>
+                </button>
+              )}
+            </>
+          ) : (
+            <span className="text-gray-400 text-sm">
+              No Subcategories
+            </span>
+          )}
+
+        </div>
+      </TableCell>
+                      <TableCell>
+                        <div className="flex justify-center space-x-2">
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => handleEdit(category)}
+                            className="hover:bg-accent"
+                          >
+                            <Edit className="h-3 w-3 mr-1" />
+                            Edit
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                            onClick={() => handleDelete(category.id)}
+                          >
+                            <Trash2 className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+
+            {/* Mobile Card View */}
+            <div className="md:hidden space-y-3 p-3">
+              {filteredCategories.map((category) => (
+                <div key={category.id} className="bg-gray-50 rounded-lg p-3 border border-gray-200">
+                  <div className="flex items-center mb-2">
+                    <div className="p-2 bg-green-100 rounded-full mr-3 flex-shrink-0">
+                      <Grid className="h-4 w-4 text-green-600" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-sm truncate">{category.name}</p>
+                      <p className="text-xs text-gray-500 truncate">{category.description}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="mb-2">
+                    <p className="text-xs text-gray-500 mb-1">Sub-Categories:</p>
+                    <div className="flex flex-wrap gap-1">
+                      {Array.isArray(category.subcategories) &&
+                      category.subcategories.length > 0 ? (
+                        <>
+                          {category.subcategories
+                            .slice(
+                              0,
+                              expandedCategory === String(category.id)
+                                ? undefined
+                                : 3
+                            )
+                            .map((sub, index) => (
+                              <Badge
+                                key={index}
+                                variant="outline"
+                                className="text-xs bg-champagne text-foreground border-transparent font-medium"
+                              >
+                                {sub}
+                              </Badge>
+                            ))}
+                          {category.subcategories.length > 3 &&
+                            expandedCategory !== String(category.id) && (
+                              <button
+                                type="button"
+                                onClick={() => setExpandedCategory(String(category.id))}
+                              >
+                                <Badge variant="secondary" className="text-xs cursor-pointer">
+                                  +{category.subcategories.length - 3}
+                                </Badge>
+                              </button>
+                            )}
+                          {expandedCategory === String(category.id) && (
+                            <button
+                              type="button"
+                              onClick={() => setExpandedCategory(null)}
+                            >
+                              <Badge variant="secondary" className="text-xs cursor-pointer">
+                                Show Less
+                              </Badge>
+                            </button>
+                          )}
+                        </>
+                      ) : (
+                        <span className="text-gray-400 text-xs">No Subcategories</span>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <div className="flex gap-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => handleEdit(category)}
+                      className="flex-1"
+                    >
+                      <Edit className="h-3 w-3" />
+                      <span className="hidden md:inline ml-1">Edit</span>
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                      onClick={() => handleDelete(category.id)}
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
           </CardContent>
         </Card>
       ) : (
@@ -266,12 +351,7 @@ const handleDelete = async (id: string) => {
           <Badge
             key={index}
             variant="outline"
-            className="
-              text-xs
-              bg-blue-50
-              text-blue-700
-              border-blue-200
-            "
+            className="text-xs bg-champagne text-foreground border-transparent font-medium"
           >
             {sub}
           </Badge>
@@ -330,7 +410,7 @@ const handleDelete = async (id: string) => {
                   <Button 
                     variant="outline" 
                     size="sm" 
-                    className="flex-1 hover:bg-blue-50"
+                    className="flex-1 hover:bg-accent"
                     onClick={() => handleEdit(category)}
                   >
                     <Edit className="h-3 w-3 mr-1" />

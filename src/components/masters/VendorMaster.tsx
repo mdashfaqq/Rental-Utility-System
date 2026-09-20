@@ -64,10 +64,10 @@ toast({
 
   
   return (
-    <div className="p-6 bg-gradient-to-br from-purple-50 to-pink-100 min-h-screen">
-      <div className="flex items-center justify-between mb-6">
+    <div className="p-6 bg-transparent min-h-full">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">Vendor Master</h1>
+          <h1 className="font-display text-3xl font-normal text-foreground mb-2">Vendor Master</h1>
           <p className="text-gray-600">Manage supplier information and contacts</p>
         </div>
         <div className="flex gap-2">
@@ -75,12 +75,12 @@ toast({
             variant="outline"
             onClick={() => setViewMode(viewMode === 'grid' ? 'table' : 'grid')}
           >
-            {viewMode === 'grid' ? <Eye className="h-4 w-4 mr-2" /> : <Grid className="h-4 w-4 mr-2" />}
-            {viewMode === 'grid' ? 'Table View' : 'Grid View'}
+            {viewMode === 'grid' ? <Eye className="h-4 w-4" /> : <Grid className="h-4 w-4" />}
+            <span className="hidden md:inline ml-2">{viewMode === 'grid' ? 'Table View' : 'Grid View'}</span>
           </Button>
-          <Button onClick={handleAdd} className="bg-purple-600 hover:bg-purple-700">
-            <Plus className="h-4 w-4 mr-2" />
-            Add Vendor
+          <Button onClick={handleAdd}>
+            <Plus className="h-4 w-4" />
+            <span className="hidden md:inline ml-2">Add Vendor</span>
           </Button>
         </div>
       </div>
@@ -97,9 +97,9 @@ toast({
                 className="pl-10"
               />
             </div>
-            <div className="flex items-center justify-between bg-purple-50 p-3 rounded-lg">
-              <span className="text-sm font-medium text-purple-800">Total Vendors:</span>
-              <Badge variant="secondary" className="bg-purple-600 text-white">
+            <div className="flex items-center justify-between bg-muted p-3 rounded-xl">
+              <span className="text-sm font-medium text-foreground">Total Vendors:</span>
+              <Badge>
                 {filteredVendors.length}
               </Badge>
             </div>
@@ -111,60 +111,105 @@ toast({
         <Card className="shadow-lg">
           <CardHeader>
             <CardTitle className="flex items-center">
-              <Users className="h-5 w-5 mr-2 text-purple-600" />
+              <Users className="h-5 w-5 mr-2" />
               Vendor List
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <Table>
-              <TableHeader>
-                <TableRow className="bg-gray-50">
-                  <TableHead className="font-semibold">Vendor</TableHead>
-                  <TableHead className="font-semibold">Contact</TableHead>
-                  <TableHead className="font-semibold">Email</TableHead>
-                  <TableHead className="font-semibold">Address</TableHead>
-                  <TableHead className="font-semibold text-center">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredVendors.map((vendor) => (
-                  <TableRow key={vendor.id} className="hover:bg-gray-50 transition-colors">
-                    <TableCell>
-                      <div className="flex items-center">
-                        <div className="p-3 bg-purple-100 rounded-full mr-4">
-                          <Users className="h-5 w-5 text-purple-600" />
-                        </div>
-                        <div className="font-medium text-gray-900">{vendor.name}</div>
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-gray-700">{vendor.contact}</TableCell>
-                    <TableCell className="text-gray-700">{vendor.email}</TableCell>
-                    <TableCell className="text-gray-700 max-w-xs truncate">{vendor.address}</TableCell>
-                    <TableCell>
-                      <div className="flex justify-center space-x-2">
-                        <Button 
-                          variant="outline" 
-                          size="sm"
-                          onClick={() => handleEdit(vendor)}
-                          className="hover:bg-purple-50"
-                        >
-                          <Edit className="h-3 w-3 mr-1" />
-                          Edit
-                        </Button>
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
-                          className="text-red-600 hover:text-red-700 hover:bg-red-50"
-                          onClick={() => handleDelete(vendor.id)}
-                        >
-                          <Trash2 className="h-3 w-3" />
-                        </Button>
-                      </div>
-                    </TableCell>
+            {/* Desktop Table View */}
+            <div className="hidden md:block overflow-x-auto">
+              <Table>
+                <TableHeader>
+                  <TableRow className="bg-gray-50">
+                    <TableHead className="font-semibold">Vendor</TableHead>
+                    <TableHead className="font-semibold">Contact</TableHead>
+                    <TableHead className="font-semibold">Email</TableHead>
+                    <TableHead className="font-semibold">Address</TableHead>
+                    <TableHead className="font-semibold text-center">Actions</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {filteredVendors.map((vendor) => (
+                    <TableRow key={vendor.id} className="hover:bg-gray-50 transition-colors">
+                      <TableCell>
+                        <div className="flex items-center">
+                          <div className="p-3 bg-purple-100 rounded-full mr-4">
+                            <Users className="h-5 w-5 text-purple-600" />
+                          </div>
+                          <div className="font-medium text-gray-900">{vendor.name}</div>
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-gray-700">{vendor.contact}</TableCell>
+                      <TableCell className="text-gray-700">{vendor.email}</TableCell>
+                      <TableCell className="text-gray-700 max-w-xs truncate">{vendor.address}</TableCell>
+                      <TableCell>
+                        <div className="flex justify-center space-x-2">
+                          <Button 
+                            variant="outline" 
+                            size="sm"
+                            onClick={() => handleEdit(vendor)}
+                            className="hover:bg-purple-50"
+                          >
+                            <Edit className="h-3 w-3 mr-1" />
+                            Edit
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                            onClick={() => handleDelete(vendor.id)}
+                          >
+                            <Trash2 className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+
+            {/* Mobile Card View */}
+            <div className="md:hidden space-y-3 p-3">
+              {filteredVendors.map((vendor) => (
+                <div key={vendor.id} className="bg-gray-50 rounded-lg p-3 border border-gray-200">
+                  <div className="flex items-center mb-2">
+                    <div className="p-2 bg-purple-100 rounded-full mr-3 flex-shrink-0">
+                      <Users className="h-4 w-4 text-purple-600" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-medium text-sm truncate">{vendor.name}</p>
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-2 mb-2 text-xs">
+                    <div><span className="text-gray-500">Contact:</span> {vendor.contact}</div>
+                    <div><span className="text-gray-500">Email:</span> {vendor.email}</div>
+                    <div className="col-span-2"><span className="text-gray-500">Address:</span> {vendor.address}</div>
+                  </div>
+                  
+                  <div className="flex gap-2">
+                    <Button 
+                      variant="outline" 
+                      size="sm"
+                      onClick={() => handleEdit(vendor)}
+                      className="flex-1"
+                    >
+                      <Edit className="h-3 w-3" />
+                      <span className="hidden md:inline ml-1">Edit</span>
+                    </Button>
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                      onClick={() => handleDelete(vendor.id)}
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
           </CardContent>
         </Card>
       ) : (

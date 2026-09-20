@@ -182,7 +182,7 @@ export default function GlassPrescriptionSlip({ customerId: preboundCustomerId =
             placeholder="Enter customer's phone…"
           />
         </div>
-        <Button onClick={() => lookupByPhone(phoneSearch)} className="bg-blue-600 hover:bg-blue-700 text-white">
+        <Button onClick={() => lookupByPhone(phoneSearch)}>
           Find Customer
         </Button>
         {customerId ? (
@@ -200,7 +200,7 @@ export default function GlassPrescriptionSlip({ customerId: preboundCustomerId =
         </div>
 
         {/* Patient details */}
-        <div className="px-6 py-5 grid grid-cols-1 md:grid-cols-6 gap-4">
+        <div className="px-4 sm:px-6 py-4 sm:py-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
           <div><label className="text-xs">Name*</label><Input value={form.patient_name} onChange={(e) => u('patient_name', e.target.value)} className={inputClass('patient_name')} /></div>
           <div><label className="text-xs">Age*</label><Input value={form.age} onChange={(e) => u('age', e.target.value)} className={inputClass('age')} /></div>
           <div><label className="text-xs">Phone*</label><Input value={form.phone} onChange={(e) => u('phone', e.target.value)} className={inputClass('phone')} /></div>
@@ -217,7 +217,7 @@ export default function GlassPrescriptionSlip({ customerId: preboundCustomerId =
         </div>
 
         {/* Eye prescription tables */}
-        <div className="px-6 pb-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="px-4 sm:px-6 pb-4 sm:pb-6 grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
           {['RIGHT EYE (OD)', 'LEFT EYE (OS)'].map((title, idx) => {
             const prefix = idx === 0 ? 'r' : 'l';
             return (
@@ -245,10 +245,10 @@ export default function GlassPrescriptionSlip({ customerId: preboundCustomerId =
         </div>
 
         {/* Lens & Material */}
-        <div className="px-6 pb-6">
+        <div className="px-4 sm:px-6 pb-4 sm:pb-6">
           <div className="border rounded-lg">
             <div className="px-4 py-2 bg-slate-50 font-semibold">Lens & Material (Optional)</div>
-            <div className="p-4 grid grid-cols-1 md:grid-cols-3 gap-2 text-sm">
+            <div className="p-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-2 text-sm">
               {[
                 ['chk_single_vision', 'Single Vision Lenses'],
                 ['chk_bifocal', 'Bi-Focal Lenses'],
@@ -271,7 +271,7 @@ export default function GlassPrescriptionSlip({ customerId: preboundCustomerId =
 
         {/* Actions */}
         <div className="px-6 pb-6 flex gap-3">
-          <Button onClick={handleSave} disabled={saving || !customerId} className="bg-green-600 hover:bg-green-700 text-white">
+          <Button onClick={handleSave} disabled={saving || !customerId}>
             {saving ? 'Saving…' : '💾 Save Prescription'}
           </Button>
         </div>
