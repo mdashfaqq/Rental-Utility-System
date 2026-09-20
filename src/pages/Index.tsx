@@ -17,8 +17,7 @@ import { DataProvider, useData } from '@/contexts/DataContext';
 import { LanguageProvider } from '@/contexts/LanguageContext';
 import { Toaster } from '@/components/ui/sonner';
 import { Loading } from '@/components/ui/loading';
-import { Button } from '@/components/ui/button';
-import { RefreshCw, AlertCircle } from 'lucide-react';
+
 import { MobileNav } from '@/components/MobileNav';
 import { Login } from '@/components/auth/Login';
 import { Register } from '@/components/auth/Register';
