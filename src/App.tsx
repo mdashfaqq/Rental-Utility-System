@@ -119,7 +119,7 @@ const App = () => (
         <TooltipProvider>
           <Toaster />
           <Sonner />
-          <BrowserRouter basename="/Premier-Rentals/">
+          <BrowserRouter basename={import.meta.env.BASE_URL}>
             <AppRoutes />
           </BrowserRouter>
         </TooltipProvider>
