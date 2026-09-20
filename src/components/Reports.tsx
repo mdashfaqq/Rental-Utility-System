@@ -2086,12 +2086,12 @@ const exportReport = (type: string) => {
     <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
 
       {/* TOTAL VALUE */}
-      <div className="rounded-2xl bg-blue-50 border border-blue-100 p-5">
-        <p className="text-sm text-blue-700 font-medium">
+      <div className="rounded-2xl bg-amber-50 border border-amber-200 p-5">
+        <p className="text-sm text-amber-800 font-medium">
           Inventory Value
         </p>
 
-        <h2 className="text-2xl font-bold text-blue-700 mt-2">
+        <h2 className="text-2xl font-bold text-amber-800 mt-2">
           ₹{
             inventoryReport
               .reduce(
@@ -2107,23 +2107,23 @@ const exportReport = (type: string) => {
           }
         </h2>
 
-        <p className="text-xs text-blue-500 mt-1">
+        <p className="text-xs text-amber-600 mt-1">
           Current stock valuation
         </p>
       </div>
 
       {/* LOW STOCK */}
-    <div className="rounded-2xl bg-yellow-50 border border-yellow-100 p-5">
+    <div className="rounded-2xl bg-orange-50 border border-orange-200 p-5">
 
   <div className="flex items-start justify-between">
 
     <div>
 
-      <p className="text-sm text-yellow-700 font-medium">
+      <p className="text-sm text-orange-800 font-medium">
         Low Stock Items
       </p>
 
-      <h2 className="text-3xl font-bold text-yellow-700 mt-2">
+      <h2 className="text-3xl font-bold text-orange-800 mt-2">
         {
           inventoryReport.filter(
             p =>
@@ -2134,14 +2134,14 @@ const exportReport = (type: string) => {
         }
       </h2>
 
-      <p className="text-xs text-yellow-500 mt-1">
+      <p className="text-xs text-orange-600 mt-1">
         Requires replenishment
       </p>
 
     </div>
 
-    <div className="p-3 rounded-xl bg-yellow-100">
-      <AlertTriangle className="h-6 w-6 text-yellow-700" />
+    <div className="p-3 rounded-xl bg-orange-100">
+      <AlertTriangle className="h-6 w-6 text-orange-700" />
     </div>
 
   </div>
@@ -2149,12 +2149,12 @@ const exportReport = (type: string) => {
 </div>
 
       {/* OUT OF STOCK */}
-      <div className="rounded-2xl bg-red-50 border border-red-100 p-5">
-        <p className="text-sm text-red-700 font-medium">
+      <div className="rounded-2xl bg-rose-50 border border-rose-200 p-5">
+        <p className="text-sm text-rose-800 font-medium">
           Out of Stock
         </p>
 
-        <h2 className="text-2xl font-bold text-red-700 mt-2">
+        <h2 className="text-2xl font-bold text-rose-800 mt-2">
           {
             inventoryReport.filter(
               p => Number(p.closingStock) <= 0
@@ -2162,18 +2162,18 @@ const exportReport = (type: string) => {
           }
         </h2>
 
-        <p className="text-xs text-red-500 mt-1">
+        <p className="text-xs text-rose-600 mt-1">
           Immediate attention needed
         </p>
       </div>
 
       {/* TOTAL ITEMS */}
-      <div className="rounded-2xl bg-green-50 border border-green-100 p-5">
-        <p className="text-sm text-green-700 font-medium">
+      <div className="rounded-2xl bg-stone-100 border border-stone-200 p-5">
+        <p className="text-sm text-stone-700 font-medium">
           Total Assets
         </p>
 
-        <h2 className="text-2xl font-bold text-green-700 mt-2">
+        <h2 className="text-2xl font-bold text-stone-700 mt-2">
           {
             inventoryReport.reduce(
               (sum, p) =>
@@ -2183,7 +2183,7 @@ const exportReport = (type: string) => {
           }
         </h2>
 
-        <p className="text-xs text-green-500 mt-1">
+        <p className="text-xs text-stone-500 mt-1">
           Available inventory units
         </p>
       </div>
