@@ -4,25 +4,25 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 
 export default defineConfig(({ mode }) => ({
-  base: '/Premier-Rentals/',
-  envPrefix: ['DEMO_', 'APP_', 'REACT_APP_', 'VITE_'],
+  base: "/",
+  envPrefix: ["DEMO_", "APP_", "REACT_APP_", "VITE_"],
+
   server: {
     host: "::",
     port: 8080,
 
-    // 🔥 ADD THIS BLOCK
     proxy: {
-      '/api': {
-        target: 'http://localhost/grocery-pos-backend/api',
+      "/api": {
+        target: "http://localhost/grocery-pos-backend/api",
         changeOrigin: true,
         secure: false,
-      }
-    }
+      },
+    },
   },
 
   plugins: [
     react(),
-    mode === 'development' && componentTagger(),
+    mode === "development" && componentTagger(),
   ].filter(Boolean),
 
   resolve: {
