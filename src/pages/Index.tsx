@@ -92,22 +92,7 @@ const setSelectedInvoiceId = (id: any) => {
     }
 
     if (error) {
-      return (
-        <div className="flex items-center justify-center min-h-[400px]">
-          <div className="text-center p-6 bg-card rounded-2xl border border-border shadow-soft">
-            <AlertCircle className="h-8 w-8 text-destructive mx-auto mb-4" />
-            <h3 className="text-lg font-semibold mb-2">Connection Error</h3>
-            <p className="text-muted-foreground mb-4">{error}</p>
-            <p className="text-sm text-muted-foreground mb-4">
-              Make sure the backend server is running and accessible.
-            </p>
-            <Button onClick={fetchData} variant="outline">
-              <RefreshCw className="h-4 w-4 mr-2" />
-              Retry Connection
-            </Button>
-          </div>
-        </div>
-      );
+      return <Loading message="Connecting to server..." className="min-h-[400px]" />;
     }
 
     switch (activeTab) {
