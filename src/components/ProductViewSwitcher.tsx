@@ -17,6 +17,22 @@ export const ProductViewSwitcher = ({ products, onQuickAdd, defaultView = 'table
   const [viewMode, setViewMode] = useState<'table' | 'grid'>(defaultView);
   const [quantities, setQuantities] = useState<{ [key: string]: number }>({});
 
+  const getStockPillClass = (stock: number) => {
+    if (stock <= 0) {
+      return 'bg-red-100 text-red-700 border-red-200';
+    }
+
+    if (stock < 10) {
+      return 'bg-red-50 text-red-700 border-red-100';
+    }
+
+    if (stock < 30) {
+      return 'bg-muted text-foreground border-border';
+    }
+
+    return 'bg-champagne text-foreground border-transparent';
+  };
+
   const handleQuantityChange = (productId: string, value: string) => {
     const quantity = parseFloat(value) || 0;
     setQuantities(prev => ({ ...prev, [productId]: quantity }));
@@ -33,60 +49,55 @@ export const ProductViewSwitcher = ({ products, onQuickAdd, defaultView = 'table
     <div className="bg-card rounded-2xl border border-black/[0.04] overflow-hidden flex flex-col flex-1">
       {/* Desktop Table View */}
       <div className="hidden md:block overflow-x-auto">
-        <Table>
+        <Table className="min-w-[760px] table-fixed">
           <TableHeader>
             <TableRow>
-              <TableHead>Product</TableHead>
-              <TableHead>Category</TableHead>
-              <TableHead>Price</TableHead>
-              <TableHead>Stock</TableHead>
-              <TableHead>Quantity</TableHead>
-              <TableHead>Action</TableHead>
+              <TableHead className="w-[29%] px-3">Product</TableHead>
+              <TableHead className="w-[19%] px-3">Category</TableHead>
+              <TableHead className="w-[14%] px-3">Price</TableHead>
+              <TableHead className="w-[13%] px-3">Stock</TableHead>
+              <TableHead className="w-[11%] px-3">Qty</TableHead>
+              <TableHead className="w-[14%] px-3 text-right">Action</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
             {products.map((product) => (
               <TableRow key={product.id} className="hover:bg-gray-50">
-                <TableCell>
-                  <div>
-                    <p className="font-medium">{product.name}</p>
-                    <p className="text-sm text-gray-500">{product.barcode}</p>
+                <TableCell className="px-3">
+                  <div className="min-w-0">
+                    <p className="font-medium truncate">{product.name}</p>
+                    <p className="text-sm text-gray-500 truncate">{product.barcode}</p>
                   </div>
                 </TableCell>
-                <TableCell>
-                  <Badge variant="outline" className="bg-champagne text-foreground border-transparent font-medium">
+                <TableCell className="px-3">
+                  <Badge variant="outline" className="max-w-full whitespace-normal bg-champagne text-foreground border-transparent font-medium">
                     {product.category}
                   </Badge>
                 </TableCell>
-                <TableCell className="font-medium text-green-600">
+                <TableCell className="px-3 font-medium text-green-600 whitespace-nowrap">
                   ₹{product.price}/{product.unit}
                 </TableCell>
-                <TableCell>
-                  <span className={`px-2 py-1 rounded-full text-xs ${
-                    product.stock < 10 
-                      ? 'bg-red-100 text-red-800' 
-                      : product.stock < 30 
-                      ? 'bg-yellow-100 text-yellow-800' 
-                      : 'bg-green-100 text-green-800'
-                  }`}>
+                <TableCell className="px-3">
+                  <span className={`inline-flex items-center whitespace-nowrap rounded-full border px-2.5 py-1 text-xs font-medium ${getStockPillClass(Number(product.stock || 0))}`}>
                     {product.stock} {product.unit}
                   </span>
                 </TableCell>
-                <TableCell>
+                <TableCell className="px-3">
                   <Input
                     type="number"
                     min={product.minQuantity || 1}
                     step={product.minQuantity || 1}
                     value={quantities[product.id] || product.minQuantity || 1}
                     onChange={(e) => handleQuantityChange(product.id, e.target.value)}
-                    className="w-20"
+                    className="h-10 w-16 min-w-16 px-2"
                   />
                 </TableCell>
-                <TableCell>
+                <TableCell className="px-3 text-right">
                   <Button
                     size="sm"
                     onClick={() => handleQuickAdd(product)}
                     disabled={product.stock <= 0}
+                    className="whitespace-nowrap px-3"
                   >
                     <Plus className="h-3 w-3 mr-1" />
                     Add
@@ -112,13 +123,7 @@ export const ProductViewSwitcher = ({ products, onQuickAdd, defaultView = 'table
             
             <div className="flex items-center justify-between mb-2">
               <span className="font-medium text-green-600 text-sm">₹{product.price}/{product.unit}</span>
-              <span className={`px-2 py-1 rounded-full text-xs ${
-                product.stock < 10 
-                  ? 'bg-red-100 text-red-800' 
-                  : product.stock < 30 
-                  ? 'bg-yellow-100 text-yellow-800' 
-                  : 'bg-green-100 text-green-800'
-              }`}>
+              <span className={`inline-flex items-center whitespace-nowrap rounded-full border px-3 py-1 text-xs font-medium ${getStockPillClass(Number(product.stock || 0))}`}>
                 {product.stock} {product.unit}
               </span>
             </div>
@@ -140,7 +145,7 @@ export const ProductViewSwitcher = ({ products, onQuickAdd, defaultView = 'table
                 className="flex-shrink-0"
               >
                 <Plus className="h-3 w-3" />
-                <span className="hidden md:inline ml-1">Add</span>
+                <span className="ml-1">Add</span>
               </Button>
             </div>
           </div>
@@ -166,9 +171,11 @@ export const ProductViewSwitcher = ({ products, onQuickAdd, defaultView = 'table
               <span className="text-green-600 font-bold">₹{product.price}</span>
             </div>
             
-            <p className="text-xs text-gray-600 mb-3">
-              Stock: {product.stock} {product.unit}
-            </p>
+            <div className="mb-3">
+              <span className={`inline-flex items-center whitespace-nowrap rounded-full border px-3 py-1 text-xs font-medium ${getStockPillClass(Number(product.stock || 0))}`}>
+                Stock: {product.stock} {product.unit}
+              </span>
+            </div>
             
             <div className="space-y-2">
               <Input
@@ -187,7 +194,7 @@ export const ProductViewSwitcher = ({ products, onQuickAdd, defaultView = 'table
                 className="w-full"
               >
                 <Plus className="h-3 w-3" />
-                <span className="hidden md:inline ml-1">Add to Cart</span>
+                <span className="ml-1">Add to Cart</span>
               </Button>
             </div>
           </CardContent>

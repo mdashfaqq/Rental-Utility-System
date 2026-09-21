@@ -136,10 +136,27 @@ if (end.getTime() < today.getTime()) {
 
   return "ongoing";
 };
+
+const getStatusPillClass = (status) => {
+  if (status === "ongoing") {
+    return "bg-champagne text-foreground border-transparent";
+  }
+
+  if (status === "overdue") {
+    return "bg-red-100 text-red-700 border-red-200";
+  }
+
+  if (status === "cancelled") {
+    return "bg-accent text-destructive border-border";
+  }
+
+  return "bg-green-100 text-green-700 border-green-200";
+};
+
   if (loading) return <Loading message="Loading challans" className="min-h-[320px]" />;
 
   return (
-    <div className="p-8">
+    <div className="p-4 sm:p-6 lg:p-8">
       <h1 className="font-display text-2xl font-normal mb-6">
         Delivery Challans
       </h1>
@@ -160,7 +177,7 @@ if (end.getTime() < today.getTime()) {
 
 <br />
 
-      <div className="bg-card rounded-2xl border overflow-hidden">
+      <div className="hidden md:block bg-card rounded-2xl border overflow-x-auto">
         <table className="w-full text-sm">
           <thead className="bg-muted/50 text-muted-foreground">
             <tr>
@@ -177,7 +194,7 @@ if (end.getTime() < today.getTime()) {
           <tbody>
             {filtered.length === 0 ? (
               <tr>
-                <td colSpan="6" className="text-center py-6 text-gray-400">
+                <td colSpan="7" className="text-center py-6 text-gray-400">
                   No challans found
                 </td>
               </tr>
@@ -202,32 +219,7 @@ if (end.getTime() < today.getTime()) {
                     {/* 🔥 STATUS UI */}
 <td className="px-6 py-4">
   <div className="flex justify-center">
-    <span
-      style={{
-        backgroundColor:
-          status === "ongoing"
-            ? "#dbeafe"
-            : status === "overdue"
-            ? "#fee2e2"
-            : status === "cancelled"
-            ? "#b91c1c"
-            : "#dcfce7",
-
-        color:
-          status === "ongoing"
-            ? "#1d4ed8"
-            : status === "overdue"
-            ? "#b91c1c"
-            : status === "cancelled"
-            ? "#ffffff"
-            : "#15803d",
-
-        padding: "4px 12px",
-        borderRadius: "9999px",
-        fontSize: "12px",
-        fontWeight: 500,
-      }}
-    >
+    <span className={`inline-flex items-center rounded-full border px-3 py-1 text-xs font-medium ${getStatusPillClass(status)}`}>
       {status}
     </span>
   </div>
@@ -276,6 +268,87 @@ if (end.getTime() < today.getTime()) {
             )}
           </tbody>
         </table>
+      </div>
+
+      <div className="md:hidden space-y-3">
+        {filtered.length === 0 ? (
+          <div className="rounded-2xl border bg-card p-6 text-center text-sm text-gray-400">
+            No challans found
+          </div>
+        ) : (
+          filtered.map((c) => {
+            const status = getStatus(c);
+
+            return (
+              <div
+                key={c.id}
+                onClick={() => onView(c.id)}
+                className={`rounded-2xl border p-4 cursor-pointer shadow-sm ${
+                  status === "overdue" ? "bg-red-50" : "bg-card"
+                }`}
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="text-xs font-medium text-gray-500">DC-{c.id}</p>
+                    <p className="mt-1 truncate font-semibold text-gray-900">
+                      {c.customer_name}
+                    </p>
+                    <p className="mt-1 text-sm text-gray-500">
+                      {c.customer_phone || "-"}
+                    </p>
+                  </div>
+
+                  <span
+                    className={`shrink-0 rounded-full border px-3 py-1 text-xs font-medium ${getStatusPillClass(status)}`}
+                  >
+                    {status}
+                  </span>
+                </div>
+
+                <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
+                  <div>
+                    <p className="text-xs text-gray-500">Start</p>
+                    <p className="font-medium">{c.start_date}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500">End</p>
+                    <p className="font-medium">{c.end_date}</p>
+                  </div>
+                </div>
+
+                {c.status !== "completed" && (
+                  <div className="mt-4 flex justify-end gap-2">
+                    {c.status !== "cancelled" && (
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="h-9 w-9 rounded-full border border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300 shadow-sm transition-all duration-200"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleCancel(c.id);
+                        }}
+                      >
+                        <XCircle className="h-4 w-4" />
+                      </Button>
+                    )}
+
+                    <Button
+                      size="icon"
+                      variant="ghost"
+                      className="h-9 w-9 rounded-full border border-red-200 text-red-700 hover:bg-red-100 hover:border-red-300 shadow-sm transition-all duration-200"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDelete(c.id);
+                      }}
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                )}
+              </div>
+            );
+          })
+        )}
       </div>
     </div>
   );

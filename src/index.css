@@ -93,12 +93,75 @@
     font-feature-settings: "ss01" on, "cv11" on;
   }
 
+  input[type="checkbox"],
+  input[type="radio"] {
+    accent-color: hsl(var(--primary));
+  }
+
   h1, h2, .font-display {
     font-family: "Instrument Serif", Georgia, serif;
   }
 }
 
 @layer utilities {
+  .bg-green-50,
+  .bg-green-100 {
+    background-color: hsl(var(--champagne)) !important;
+  }
+
+  .bg-red-50,
+  .bg-red-100 {
+    background-color: hsl(var(--accent)) !important;
+  }
+
+  .bg-yellow-50,
+  .bg-yellow-100 {
+    background-color: hsl(var(--secondary)) !important;
+  }
+
+  .bg-blue-50,
+  .bg-blue-100 {
+    background-color: hsl(var(--champagne)) !important;
+  }
+
+  .text-green-500,
+  .text-green-600,
+  .text-green-700,
+  .text-green-800 {
+    color: hsl(var(--sage)) !important;
+  }
+
+  .text-red-500,
+  .text-red-600,
+  .text-red-700,
+  .text-red-800 {
+    color: hsl(var(--destructive)) !important;
+  }
+
+  .text-yellow-600,
+  .text-yellow-700,
+  .text-yellow-800 {
+    color: hsl(var(--muted-foreground)) !important;
+  }
+
+  .text-blue-500,
+  .text-blue-600,
+  .text-blue-700,
+  .text-blue-800 {
+    color: hsl(var(--sage)) !important;
+  }
+
+  .border-green-100,
+  .border-green-200,
+  .border-blue-100,
+  .border-blue-200,
+  .border-red-100,
+  .border-red-200,
+  .border-yellow-100,
+  .border-yellow-200 {
+    border-color: hsl(var(--border)) !important;
+  }
+
   .page-canvas {
     @apply min-h-full p-4 sm:p-6 space-y-6;
   }

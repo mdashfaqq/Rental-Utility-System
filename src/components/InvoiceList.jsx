@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { API_BASE_URL } from "@/services/api";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, Grid, List } from "lucide-react";
+import { Search } from "lucide-react";
 import { Loading } from "@/components/ui/loading";
 export const InvoiceList = ({ onView }) => {
   const [data, setData] = useState([]);
@@ -39,7 +39,6 @@ useEffect(() => {
     .catch(err => console.error(err))
     .finally(() => setLoading(false));
 }, []);
-console.log(data);
 
   // 🔥 STATUS LOGIC
   const getStatus = (inv) => {
@@ -97,7 +96,7 @@ console.log(data);
 <br />
       
       {/* Desktop Table View */}
-      <div className="hidden md:block bg-card rounded-2xl border overflow-hidden">
+      <div className="hidden md:block bg-card rounded-2xl border overflow-x-auto">
         <table className="w-full text-sm">
 
           <thead className="bg-muted/50 text-muted-foreground">
@@ -182,10 +181,10 @@ console.log(data);
               <div
                 key={inv.id}
                 onClick={() => onView(inv.id)}
-                className="bg-card rounded-2xl border p-4 cursor-pointer"
+                className="bg-card rounded-2xl border p-4 cursor-pointer shadow-sm"
               >
-                <div className="flex justify-between items-start mb-3">
-                  <div>
+                <div className="flex justify-between items-start gap-3 mb-3">
+                  <div className="min-w-0">
                     <p className="font-medium text-sm">#{inv.id}</p>
                     <p className="text-xs text-gray-500">{inv.created_at?.split(" ")[0]}</p>
                   </div>
@@ -199,14 +198,23 @@ console.log(data);
                     {status}
                   </span>
                 </div>
-                <div className="mb-2">
-                  <p className="font-medium text-sm">{inv.customer_name}</p>
+                <div className="mb-3 min-w-0">
+                  <p className="font-medium text-sm truncate">{inv.customer_name}</p>
                   <p className="text-xs text-gray-500">{inv.customer_phone}</p>
                 </div>
-                <div className="grid grid-cols-3 gap-2 text-xs">
-                  <div><span className="text-gray-500">Total:</span> ₹{total}</div>
-                  <div><span className="text-gray-500">Paid:</span> ₹{paid}</div>
-                  <div><span className="text-gray-500">Balance:</span> <span className="text-red-600 font-medium">₹{balance.toFixed(2)}</span></div>
+                <div className="grid grid-cols-2 gap-2 text-xs">
+                  <div className="rounded-xl bg-gray-50 px-3 py-2">
+                    <span className="block text-gray-500">Total</span>
+                    <span className="font-medium">₹{total}</span>
+                  </div>
+                  <div className="rounded-xl bg-gray-50 px-3 py-2">
+                    <span className="block text-gray-500">Paid</span>
+                    <span className="font-medium">₹{paid}</span>
+                  </div>
+                  <div className="col-span-2 rounded-xl bg-gray-50 px-3 py-2">
+                    <span className="block text-gray-500">Balance</span>
+                    <span className="text-red-600 font-semibold">₹{balance.toFixed(2)}</span>
+                  </div>
                 </div>
               </div>
             );

@@ -128,7 +128,7 @@ const handleView = (id) => {
   if (loading) return <Loading message="Loading quotations" className="min-h-[320px]" />;
 
   return (
-    <div className="p-4 space-y-4">
+    <div className="p-4 sm:p-6 lg:p-8 space-y-4">
 
       {/* HEADER */}
       <div className="flex justify-between items-center">
@@ -176,7 +176,8 @@ const handleView = (id) => {
 
       {/* TABLE VIEW */}
       {view === "table" && (
-       <div className="bg-card rounded-2xl border overflow-hidden">
+        <>
+       <div className="hidden md:block bg-card rounded-2xl border overflow-x-auto">
          <table className="w-full text-sm table-fixed">
 
             <thead className="bg-muted/50 text-muted-foreground">
@@ -195,7 +196,7 @@ const handleView = (id) => {
             <tbody>
               {filtered.length === 0 ? (
                 <tr>
-                  <td colSpan="7" className="text-center p-4 text-gray-500">
+                  <td colSpan="8" className="text-center p-4 text-gray-500">
                     No quotations found
                   </td>
                 </tr>
@@ -283,6 +284,101 @@ const handleView = (id) => {
 
           </table>
         </div>
+
+        <div className="md:hidden space-y-3">
+          {filtered.length === 0 ? (
+            <div className="rounded-2xl border bg-card p-6 text-center text-sm text-gray-500">
+              No quotations found
+            </div>
+          ) : (
+            filtered.map((q) => (
+              <div
+                key={q.id}
+                onClick={() => onView(q.id)}
+                className="bg-card rounded-2xl border p-4 cursor-pointer shadow-sm"
+              >
+                <div className="flex items-start justify-between gap-3">
+                  <div className="min-w-0">
+                    <p className="text-xs font-medium text-gray-500">QT-{q.id}</p>
+                    <p className="mt-1 truncate font-semibold text-gray-900">
+                      {q.customer_name}
+                    </p>
+                    <p className="mt-1 text-sm text-gray-500">
+                      {q.customer_phone || "-"}
+                    </p>
+                  </div>
+
+                  <span
+                    className={`shrink-0 px-2 py-1 rounded-full text-xs font-medium ${
+                      q.status === "approved"
+                        ? "bg-green-100 text-green-700"
+                        : q.status === "cancelled"
+                        ? "bg-red-100 text-red-700"
+                        : "bg-yellow-100 text-yellow-700"
+                    }`}
+                  >
+                    {q.status || "draft"}
+                  </span>
+                </div>
+
+                <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
+                  <div>
+                    <p className="text-xs text-gray-500">Start</p>
+                    <p className="font-medium">{q.start_date}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-500">End</p>
+                    <p className="font-medium">{q.end_date}</p>
+                  </div>
+                  <div className="col-span-2 flex items-center justify-between rounded-xl bg-gray-50 px-3 py-2">
+                    <span className="text-xs text-gray-500">Total</span>
+                    <span className="font-semibold">
+                      ₹{Number(q.total_amount).toFixed(2)}
+                    </span>
+                  </div>
+                </div>
+
+                {(q.status !== "completed" &&
+                  q.status !== "cancelled" &&
+                  Number(q.challan_id ?? 0) === 0) ||
+                q.status === "cancelled" ? (
+                  <div className="mt-4 flex justify-end gap-2">
+                    {q.status !== "completed" &&
+                      q.status !== "cancelled" &&
+                      Number(q.challan_id ?? 0) === 0 && (
+                        <Button
+                          size="icon"
+                          variant="ghost"
+                          className="h-9 w-9 rounded-full border border-red-200 text-red-600 hover:bg-red-50 hover:border-red-300 transition-all"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleCancel(q.id);
+                          }}
+                        >
+                          <XCircle className="h-4 w-4" />
+                        </Button>
+                      )}
+
+                    {q.status === "cancelled" && (
+                      <Button
+                        size="icon"
+                        variant="ghost"
+                        className="h-9 w-9 rounded-full border border-red-200 text-red-700 hover:bg-red-100 hover:border-red-300 transition-all"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDelete(q.id);
+                        }}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                    )}
+                  </div>
+                ) : null}
+              </div>
+            ))
+          )}
+        </div>
+        </>
       )}
 
       {/* GRID VIEW */}
